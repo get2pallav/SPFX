@@ -24,7 +24,7 @@ export default class EasyListWebPart extends BaseClientSideWebPart<IEasyListWebP
         ListName: this.properties.ListName,
         FieldsName: this.properties.FieldsName,
         FieldTypes: this.properties.FieldTypes,
-        Styles:this.properties.Styles
+        Styles: this.properties.Styles
       }
     );
 
@@ -67,18 +67,18 @@ export default class EasyListWebPart extends BaseClientSideWebPart<IEasyListWebP
                 PropertyPaneTextField('FieldTypes', {
                   label: strings.FieldTypes,
                   description: strings.FieldTypesDescription,
-                  multiline:true
+                  multiline: true
                 }),
                 PropertyPaneDropdown('Styles', {
                   label: "Styles",
-                  options:[
-                  {key:'',text:"No Style"},
-                  {key:'display',text:"Basic"},
-                  {key:'hover',text:"Hover"},
-                  {key:'display compact',text:"Compact"},
-                  {key:'cell-border',text:"cell borders"},
-                  {key:'row-border',text:"row borders"}
-                ]
+                  options: [
+                    { key: '', text: "No Style" },
+                    { key: 'display', text: "Basic" },
+                    { key: 'hover', text: "Hover" },
+                    { key: 'display compact', text: "Compact" },
+                    { key: 'cell-border', text: "cell borders" },
+                    { key: 'row-border', text: "row borders" }
+                  ]
 
                 }),
                 PropertyPaneLabel('Error', {
