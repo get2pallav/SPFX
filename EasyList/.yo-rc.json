@@ -1,0 +1,8 @@
+{
+  "@microsoft/generator-sharepoint": {
+    "libraryName": "sp-fx-easy-list",
+    "framework": "react",
+    "version": "1.0.2",
+    "libraryId": "d78e6a19-d94b-4c98-a4dd-761ce59bd08d"
+  }
+}

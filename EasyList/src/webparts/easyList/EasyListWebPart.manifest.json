@@ -1,0 +1,23 @@
+{
+  "$schema": "../../../node_modules/@microsoft/sp-module-interfaces/lib/manifestSchemas/jsonSchemas/clientSideComponentManifestSchema.json",
+
+  "id": "fce9c774-6c5e-46e6-8582-ebb8c6634f93",
+  "alias": "EasyListWebPart",
+  "componentType": "WebPart",
+  "version": "0.0.1",
+  "manifestVersion": 2,
+
+  "preconfiguredEntries": [{
+    "groupId": "fce9c774-6c5e-46e6-8582-ebb8c6634f93",
+    "group": { "default": "Under Development" },
+    "title": { "default": "EasyList" },
+    "description": { "default": "Easy List UI display" },
+    "officeFabricIconFontName": "Page",
+    "properties": {
+      "ListName": "EasyList",
+      "Error":"",
+      "FieldsName":"ID,Title",
+      "FieldTypes":"{'Modified':'DateTime','UR':'Link'}"
+    }
+  }]
+}
