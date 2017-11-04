@@ -16,8 +16,10 @@
     "@types/react-dom": "0.14.18",
     "@types/webpack-env": ">=1.12.1 <1.14.0",
     "dateformat": "^3.0.2",
+    "jquery": "^3.2.1",
     "react": "15.4.2",
-    "react-dom": "15.4.2"
+    "react-dom": "15.4.2",
+    "sp-pnp-js": "^3.0.1"
   },
   "devDependencies": {
     "@microsoft/sp-build-web": "~1.0.1",
