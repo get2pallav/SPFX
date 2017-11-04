@@ -1,0 +1,10 @@
+{
+  "solution": {
+    "name": "sp-fx-easy-list-client-side-solution",
+    "id": "d78e6a19-d94b-4c98-a4dd-761ce59bd08d",
+    "version": "1.0.0.0"
+  },
+  "paths": {
+    "zippedPackage": "solution/sp-fx-easy-list.sppkg"
+  }
+}
