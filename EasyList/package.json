@@ -8,7 +8,10 @@
   "dependencies": {
     "@microsoft/sp-client-base": "~1.0.0",
     "@microsoft/sp-core-library": "~1.4.1",
+    "@microsoft/sp-lodash-subset": "~1.4.1",
+    "@microsoft/sp-office-ui-fabric-core": "~1.4.1",
     "@microsoft/sp-webpart-base": "~1.4.1",
+    "@types/es6-collections": "^0.5.31",
     "@types/react": "15.6.6",
     "@types/react-addons-shallow-compare": "0.14.17",
     "@types/react-addons-test-utils": "0.14.15",
@@ -19,9 +22,7 @@
     "jquery": "^3.2.1",
     "react": "15.6.2",
     "react-dom": "15.6.2",
-    "sp-pnp-js": "^3.0.1",
-    "@microsoft/sp-lodash-subset": "~1.4.1",
-    "@microsoft/sp-office-ui-fabric-core": "~1.4.1"
+    "sp-pnp-js": "^3.0.1"
   },
   "devDependencies": {
     "@microsoft/sp-build-web": "~1.4.1",

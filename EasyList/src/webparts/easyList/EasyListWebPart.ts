@@ -14,7 +14,7 @@ import * as strings from 'easyListStrings';
 import EasyList from './components/EasyList';
 import { IEasyListProps } from './components/IEasyListProps';
 import { IEasyListWebPartProps } from './IEasyListWebPartProps';
-import { ELHelper } from './Helper/helper';
+import { ELHelper } from '../Helpers/helper' ;
 export default class EasyListWebPart extends BaseClientSideWebPart<IEasyListWebPartProps> {
   errorString = "";
   public render(): void {

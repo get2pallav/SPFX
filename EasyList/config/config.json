@@ -1,19 +1,27 @@
 {
-  "entries": [
-    {
-      "entry": "./lib/webparts/easyList/EasyListWebPart.js",
-      "manifest": "./src/webparts/easyList/EasyListWebPart.manifest.json",
-      "outputPath": "./dist/easy-list.bundle.js"
+  "$schema": "https://dev.office.com/json-schemas/spfx-build/config.2.0.schema.json",
+  "version": "2.0",
+  "bundles": {
+    "easy-list-bundle": {
+      "components": [
+        {
+          "entrypoint": "./lib/webparts/easyList/EasyListWebPart.js",
+          "manifest": "./src/webparts/easyList/EasyListWebPart.manifest.json"
+        }
+      ]
     },
-    {
-      "entry": "./lib/webparts/palEditor/PalEditorWebPart.js",
-      "manifest": "./src/webparts/palEditor/PalEditorWebPart.manifest.json",
-      "outputPath": "./dist/pal-editor-web-part.js"
+    "pal-editor-web-part": {
+      "components": [
+        {
+          "entrypoint": "./lib/webparts/palEditor/PalEditorWebPart.js",
+          "manifest": "./src/webparts/palEditor/PalEditorWebPart.manifest.json"
+        }
+      ]
     }
-  ],
-  "externals": {},
+  },
   "localizedResources": {
-    "easyListStrings": "webparts/easyList/loc/{locale}.js",
+    "easyListStrings": "lib/webparts/easyList/loc/{locale}.js",
     "PalEditorWebPartStrings": "lib/webparts/palEditor/loc/{locale}.js"
-  }
+  },
+  "externals": {}
 }

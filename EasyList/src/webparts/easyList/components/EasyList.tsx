@@ -3,7 +3,7 @@ import styles from './EasyList.module.scss';
 import { IEasyListProps, IEasyListState } from './IEasyListProps';
 import { ELRow } from './ELRow';
 import { escape } from '@microsoft/sp-lodash-subset';
-import { ELHelper } from '../Helper/helper';
+import { ELHelper } from '../../Helpers/helper';
 import { SPComponentLoader } from '@microsoft/sp-loader';
 
 export default class EasyList extends React.Component<IEasyListProps, IEasyListState> {
@@ -52,7 +52,7 @@ export default class EasyList extends React.Component<IEasyListProps, IEasyListS
       headElem = <thead><tr><td>ID</td><td>Title</td></tr></thead>
 
     return (
-      <table id="table_ds" className={this.props.Styles} cellSpacing="0" width="100%" style={{display: this.state.loaded}}>
+      <table id="table_ds" className={this.props.Styles} cellSpacing="0" style={{display: this.state.loaded, width:'100%' }}>
         {headElem}
         <tbody>
          { this.state.items.map((item) => {return <ELRow Fields={fields} item={item} FieldTypes={fieldTypes}></ELRow>  }) }
