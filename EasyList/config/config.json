@@ -4,10 +4,16 @@
       "entry": "./lib/webparts/easyList/EasyListWebPart.js",
       "manifest": "./src/webparts/easyList/EasyListWebPart.manifest.json",
       "outputPath": "./dist/easy-list.bundle.js"
+    },
+    {
+      "entry": "./lib/webparts/palEditor/PalEditorWebPart.js",
+      "manifest": "./src/webparts/palEditor/PalEditorWebPart.manifest.json",
+      "outputPath": "./dist/pal-editor-web-part.js"
     }
   ],
   "externals": {},
   "localizedResources": {
-    "easyListStrings": "webparts/easyList/loc/{locale}.js"
+    "easyListStrings": "webparts/easyList/loc/{locale}.js",
+    "PalEditorWebPartStrings": "lib/webparts/palEditor/loc/{locale}.js"
   }
 }
