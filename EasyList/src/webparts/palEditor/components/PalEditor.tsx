@@ -5,6 +5,7 @@ import { escape } from '@microsoft/sp-lodash-subset';
 const ClassicEditor = require('@ckeditor/ckeditor5-build-classic');
 import { IPeoplePickerProps, NormalPeoplePicker, IPersonaProps, IBasePickerProps } from 'office-ui-fabric-react';
 import { IPeoplePickerItemProps } from 'office-ui-fabric-react/lib/components/pickers/PeoplePicker/PeoplePickerItems/PeoplePickerItem.types';
+import {ELHelper,IPeopleResultsProps } from '../../Helpers/helper';
 
 export default class PalEditor extends React.Component<IPalEditorProps, {}> {
 
