@@ -3,13 +3,15 @@ import styles from './PalEditor.module.scss';
 import { IPalEditorProps } from './IPalEditorProps';
 import { escape } from '@microsoft/sp-lodash-subset';
 const ClassicEditor = require('@ckeditor/ckeditor5-build-classic');
-import Image from '@ckeditor/ckeditor5-image/src/image';
-
+import { IPeoplePickerProps, NormalPeoplePicker, IPersonaProps, IBasePickerProps } from 'office-ui-fabric-react';
+import { IPeoplePickerItemProps } from 'office-ui-fabric-react/lib/components/pickers/PeoplePicker/PeoplePickerItems/PeoplePickerItem.types';
 
 export default class PalEditor extends React.Component<IPalEditorProps, {}> {
+
   public render(): React.ReactElement<IPalEditorProps> {
     return (
       <div id="palEditor">
+
       </div>
     );
   }
