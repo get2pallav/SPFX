@@ -3,15 +3,16 @@ import styles from './PalEditor.module.scss';
 import { IPalEditorProps } from './IPalEditorProps';
 import { escape } from '@microsoft/sp-lodash-subset';
 const ClassicEditor = require('@ckeditor/ckeditor5-build-classic');
-import { IPeoplePickerProps, NormalPeoplePicker, IBasePickerSuggestionsProps } from 'office-ui-fabric-react/lib/Pickers';
+import { IPeoplePickerProps, NormalPeoplePicker, IBasePickerSuggestionsProps, IBasePicker } from 'office-ui-fabric-react/lib/Pickers';
 import { IPersonaProps, Persona } from 'office-ui-fabric-react/lib/Persona';
 import { assign, autobind, BaseComponent } from 'office-ui-fabric-react/lib/Utilities';
 import { IPeoplePickerItemProps, IPersonaWithMenu } from 'office-ui-fabric-react/lib/components/pickers/PeoplePicker/PeoplePickerItems/PeoplePickerItem.types';
 import { ELHelper, IPeopleResultsProps } from '../../Helpers/helper';
 
 export interface IPalEditorState {
-  peopleList?: IPersonaProps[],
-  currentSelectedPersona?: IPersonaProps[]
+  peopleList?: IPersonaProps[];
+  mostRecentlyUsed?: IPersonaProps[];
+  currentSelectedPersona?: IPersonaProps[];
 }
 const suggestionProps: IBasePickerSuggestionsProps = {
   suggestionsHeaderText: 'Suggested People',
@@ -24,7 +25,16 @@ const suggestionProps: IBasePickerSuggestionsProps = {
 };
 
 export default class PalEditor extends React.Component<IPalEditorProps, IPalEditorState> {
+  private _picker: IBasePicker<IPersonaProps>;
 
+  constructor(props: IPalEditorProps) {
+    super(props);
+    this.state = {
+      mostRecentlyUsed: [],
+      currentSelectedPersona: [],
+      peopleList: []
+    }
+  }
   public render(): React.ReactElement<IPalEditorProps> {
     return (
       <div id="palEditor">
@@ -53,23 +63,92 @@ export default class PalEditor extends React.Component<IPalEditorProps, IPalEdit
 
   private loadNormalPeoplePicker() {
     var peoplItems: IPeoplePickerProps = {
-      onResolveSuggestions: (filter: string, selectedItems?: IPersonaProps[], limitResults?: number) => { return this.onResolveSuggestion(filter, selectedItems, limitResults) },
+      onResolveSuggestions: this.onResolveSuggestion.bind(this),
       pickerSuggestionsProps: suggestionProps,
-      getTextFromItem: (Item: IPersonaProps): string => { return Item.primaryText as string },
-      
+      getTextFromItem: (Item: IPersonaProps): string => { return Item.secondaryText as string },
+      key: 'normal',
+      onEmptyInputFocus: this.returnMostRecenlyUsed.bind(this),
+      className: 'ms-PeoplePicker',
+      onRemoveSuggestion: (item: IPersonaProps) => { this.onRemoveSuggestion(item) },
+      componentRef: (component?: IBasePicker<IPersonaProps>) => { this._picker = component; console.log(this._picker) },
+      inputProps: {
+        onBlur: (ev: React.FocusEvent<HTMLInputElement>) => console.log('onBlur called'),
+        onFocus: (ev: React.FocusEvent<HTMLInputElement>) => console.log('onFocus called'),
+        'aria-label': 'People Picker'
+      },
+      onInputChange: this._onInputChange.bind(this),
+      onChange: this._onItemsChange.bind(this),
+
     }
     return (
       <NormalPeoplePicker {...peoplItems} />
     );
   }
+  private _onInputChange(input: string): string {
+    const outlookRegEx = /<.*>/g;
+    const emailAddress = outlookRegEx.exec(input);
 
-  private onResolveSuggestion(filter: string, selectedItems?: IPersonaProps[], limitResults?: number): Promise<IPersonaProps[]>  {
-    return new Promise<IPersonaProps[]>((resolve) => {
-      
-      ELHelper.getPeopleResults(filter).then((results:IPersonaProps[]) => { resolve(results) })
-    //  resolve(this.state.peopleList);       
+    if (emailAddress && emailAddress[0]) {
+      return emailAddress[0].substring(1, emailAddress[0].length - 1);
+    }
+
+    return input;
+  }
+  private onResolveSuggestion(filter: string, selectedItems?: IPersonaProps[], limitResults?: number): Promise<IPersonaProps[]> {
+
+    let mru: IPersonaProps[] = this.state.mostRecentlyUsed ? this.state.mostRecentlyUsed : [];
+    if (mru.length >= 5) {
+      mru.splice(0, 3);
+    }
+    selectedItems.forEach((item) => {
+      if (mru.indexOf(item) == -1)
+        mru.push(item);
     })
-   // return this.state.peopleList;
+
+    this.state = {
+      currentSelectedPersona: selectedItems,
+      mostRecentlyUsed: mru
+    }
+    return new Promise<IPersonaProps[]>((resolve) => {
+      if (filter.length > 2) {
+        ELHelper.getPeopleResults(filter).then((results: IPersonaProps[]) => { resolve(results) })
+      }
+
+    })
+  }
+
+  private _onItemsChange(items: any[]) {
+    this.setState({
+      currentSelectedPersona: items
+    });
+  }
+  private onRemoveSuggestion(item: IPersonaProps) {
+    const { peopleList, mostRecentlyUsed } = this.state;
+    const indexPeopleList: number = peopleList.indexOf(item);
+    // const indexMostRecentlyUsed: number = mruState.indexOf(item);
+
+    if (indexPeopleList >= 0) {
+      const newPeople: IPersonaProps[] = peopleList.slice(0, indexPeopleList).concat(peopleList.slice(indexPeopleList + 1));
+      this.setState({ peopleList: newPeople });
+    }
+
+    // if (indexMostRecentlyUsed >= 0) {
+    //   const newSuggestedPeople: IPersonaProps[] = mruState.slice(0, indexMostRecentlyUsed).concat(mruState.slice(indexMostRecentlyUsed + 1));
+    //   this.setState({ mostRecentlyUsed: newSuggestedPeople });
+    // }
+  }
+
+  private returnMostRecenlyUsed(currentPersonas: IPersonaProps[]): IPersonaProps[] | Promise<IPersonaProps[]> {
+    // console.log(currentPersonas);
+    let { mostRecentlyUsed } = this.state;
+    debugger;
+    currentPersonas.forEach((persona) => {
+      const idx: number = mostRecentlyUsed.indexOf(persona);
+      if (idx >= 0) {
+        mostRecentlyUsed = mostRecentlyUsed.splice(0, idx).concat(mostRecentlyUsed.splice(idx + 1));
+      }
+    })
+    return new Promise<IPersonaProps[]>((resolve) => { resolve(mostRecentlyUsed) });
   }
 
   private getCKeditor(): void {

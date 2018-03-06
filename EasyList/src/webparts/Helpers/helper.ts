@@ -46,16 +46,34 @@ export class ELHelper {
         })
     }
 
-    static getPeopleResults(filterText?: string): Promise<IPersonaProps[]> {
+    static getSiteUsers(): Promise<IPersonaProps[]> {
         return new Promise<IPersonaProps[]>((resolve) => {
             let personas: IPersonaProps[] = [];
-            if (!filterText)
-                filterText = "A";
-            sp.web.siteUsers.filter("startswith(Title,'" + filterText + "') or startswith(Email,'"+ filterText + "')").get().then((peoples: any) => {
+            sp.web.siteUsers.get().then((peoples: any) => {
                 peoples.forEach(people => {
                     personas.push({
                         primaryText: people.Title,
                         secondaryText: people.Email
+                    })
+                });
+                resolve(personas);
+            })
+        })
+    }
+
+
+    static getPeopleResults(filterText?: string): Promise<IPersonaProps[]> {
+        return new Promise<IPersonaProps[]>((resolve) => {
+            let personas: IPersonaProps[] = [];
+
+            let filterWithFirstUpperCase = filterText.charAt(0).toUpperCase() + filterText.slice(1);
+            
+            sp.web.siteUsers.filter("startswith(Title,'" + filterText + "') or startswith(Email,'" + filterText + "') or startswith(Title,'" + filterWithFirstUpperCase + "') or startswith(Email,'" + filterWithFirstUpperCase + "')").get().then((peoples: any) => {
+                peoples.forEach(people => {
+                    personas.push({
+                        primaryText: people.Title,
+                        secondaryText: people.Email,
+                        imageUrl:'/_layouts/15/userphoto.aspx?size=s&username='+people.Email
                     })
                 });
                 resolve(personas);
