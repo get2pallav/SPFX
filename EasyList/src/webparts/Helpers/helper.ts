@@ -2,11 +2,12 @@ import {
     sp,
     ListEnsureResult
 } from 'sp-pnp-js';
+import { IPersonaProps } from 'office-ui-fabric-react/lib/Persona';
 
-export interface IPeopleResultsProps{
-  jobTitle: string,
-  PictureUrl: string,
-  PreferredName :string
+export interface IPeopleResultsProps {
+    jobTitle: string,
+    PictureUrl: string,
+    PreferredName: string
 }
 
 export class ELHelper {
@@ -34,28 +35,31 @@ export class ELHelper {
         });
     }
 
-    static getUserName(Id:number) : Promise<string>{
-        return new Promise<string>((resolve) =>{
-            sp.web.getUserById(Id).get().then((user) =>{
-               resolve(user.Title);
+    static getUserName(Id: number): Promise<string> {
+        return new Promise<string>((resolve) => {
+            sp.web.getUserById(Id).get().then((user) => {
+                resolve(user.Title);
             })
-            .catch(()=>{
-                resolve("")
-            })
+                .catch(() => {
+                    resolve("")
+                })
         })
     }
 
-    static getPeopleResults():Promise<IPeopleResultsProps[]>{
-        let props:IPeopleResultsProps[] = [
-            {
-                jobTitle:"hi",
-                PictureUrl:"2",
-                PreferredName:"ok"
-            }
-        ]
-        
-        return new Promise<IPeopleResultsProps[]> ((resolve)=>{
-            resolve(props);
+    static getPeopleResults(filterText?: string): Promise<IPersonaProps[]> {
+        return new Promise<IPersonaProps[]>((resolve) => {
+            let personas: IPersonaProps[] = [];
+            if (!filterText)
+                filterText = "A";
+            sp.web.siteUsers.filter("startswith(Title,'" + filterText + "') or startswith(Email,'"+ filterText + "')").get().then((peoples: any) => {
+                peoples.forEach(people => {
+                    personas.push({
+                        primaryText: people.Title,
+                        secondaryText: people.Email
+                    })
+                });
+                resolve(personas);
+            })
         })
     }
 }
