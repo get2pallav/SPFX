@@ -61,6 +61,9 @@ export class ELHelper {
         })
     }
 
+    static getUserProperites(user:string){
+        sp.profiles.getPropertiesFor('i:0%23.f|membership|Cynthia.Ayers@cox.com').then((results)=>{console.log(results)})
+    }
 
     static getPeopleResults(filterText?: string): Promise<IPersonaProps[]> {
         return new Promise<IPersonaProps[]>((resolve) => {

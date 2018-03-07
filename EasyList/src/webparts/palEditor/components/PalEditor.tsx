@@ -8,6 +8,7 @@ import { IPersonaProps, Persona } from 'office-ui-fabric-react/lib/Persona';
 import { assign, autobind, BaseComponent } from 'office-ui-fabric-react/lib/Utilities';
 import { IPeoplePickerItemProps, IPersonaWithMenu } from 'office-ui-fabric-react/lib/components/pickers/PeoplePicker/PeoplePickerItems/PeoplePickerItem.types';
 import { ELHelper, IPeopleResultsProps } from '../../Helpers/helper';
+import { DefaultButton } from 'office-ui-fabric-react/lib/Button';
 
 export interface IPalEditorState {
   peopleList?: IPersonaProps[];
@@ -39,6 +40,8 @@ export default class PalEditor extends React.Component<IPalEditorProps, IPalEdit
     return (
       <div id="palEditor">
         {this.loadNormalPeoplePicker()}
+        <br/>
+        <DefaultButton primary={true} text="Get Properties" onClick={this.getUserProperties.bind(this)} />
       </div>
       //   <NormalPeoplePicker
       //   onResolveSuggestions={ this._onFilterChanged }
@@ -61,6 +64,10 @@ export default class PalEditor extends React.Component<IPalEditorProps, IPalEdit
     );
   }
 
+  private getUserProperties(){
+    console.log('okies');debugger;
+    ELHelper.getUserProperites(this.state.currentSelectedPersona[0].secondaryText);
+  }
   private loadNormalPeoplePicker() {
     var peoplItems: IPeoplePickerProps = {
       onResolveSuggestions: this.onResolveSuggestion.bind(this),
@@ -125,23 +132,21 @@ export default class PalEditor extends React.Component<IPalEditorProps, IPalEdit
   private onRemoveSuggestion(item: IPersonaProps) {
     const { peopleList, mostRecentlyUsed } = this.state;
     const indexPeopleList: number = peopleList.indexOf(item);
-    // const indexMostRecentlyUsed: number = mruState.indexOf(item);
+    const indexMostRecentlyUsed: number = mostRecentlyUsed.indexOf(item);
 
     if (indexPeopleList >= 0) {
       const newPeople: IPersonaProps[] = peopleList.slice(0, indexPeopleList).concat(peopleList.slice(indexPeopleList + 1));
       this.setState({ peopleList: newPeople });
     }
 
-    // if (indexMostRecentlyUsed >= 0) {
-    //   const newSuggestedPeople: IPersonaProps[] = mruState.slice(0, indexMostRecentlyUsed).concat(mruState.slice(indexMostRecentlyUsed + 1));
-    //   this.setState({ mostRecentlyUsed: newSuggestedPeople });
-    // }
+    if (indexMostRecentlyUsed >= 0) {
+      const newSuggestedPeople: IPersonaProps[] = mostRecentlyUsed.slice(0, indexMostRecentlyUsed).concat(mostRecentlyUsed.slice(indexMostRecentlyUsed + 1));
+      this.setState({ mostRecentlyUsed: newSuggestedPeople });
+    }
   }
-
   private returnMostRecenlyUsed(currentPersonas: IPersonaProps[]): IPersonaProps[] | Promise<IPersonaProps[]> {
     // console.log(currentPersonas);
     let { mostRecentlyUsed } = this.state;
-    debugger;
     currentPersonas.forEach((persona) => {
       const idx: number = mostRecentlyUsed.indexOf(persona);
       if (idx >= 0) {
