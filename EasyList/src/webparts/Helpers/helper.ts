@@ -1,8 +1,11 @@
 import {
     sp,
     ListEnsureResult
+
 } from 'sp-pnp-js';
 import { IPersonaProps } from 'office-ui-fabric-react/lib/Persona';
+import * as $ from 'jquery';
+
 
 export interface IPeopleResultsProps {
     jobTitle: string,
@@ -61,8 +64,14 @@ export class ELHelper {
         })
     }
 
-    static getUserProperites(user:string){
-        sp.profiles.getPropertiesFor('i:0%23.f|membership|Cynthia.Ayers@cox.com').then((results)=>{console.log(results)})
+    static getUserProperites(user: string):Promise<any[]> {
+        return new Promise<any>((resolve)=>{
+        $.getJSON("/_api/SP.UserProfiles.PeopleManager/GetPropertiesFor(@v)?@v='i:0%23.f|membership|" + user + "'").then(
+            (result) => {
+                    resolve(result.UserProfileProperties);
+            });
+        })
+
     }
 
     static getPeopleResults(filterText?: string): Promise<IPersonaProps[]> {
@@ -70,17 +79,18 @@ export class ELHelper {
             let personas: IPersonaProps[] = [];
 
             let filterWithFirstUpperCase = filterText.charAt(0).toUpperCase() + filterText.slice(1);
-            
-            sp.web.siteUsers.filter("startswith(Title,'" + filterText + "') or startswith(Email,'" + filterText + "') or startswith(Title,'" + filterWithFirstUpperCase + "') or startswith(Email,'" + filterWithFirstUpperCase + "')").get().then((peoples: any) => {
-                peoples.forEach(people => {
-                    personas.push({
-                        primaryText: people.Title,
-                        secondaryText: people.Email,
-                        imageUrl:'/_layouts/15/userphoto.aspx?size=s&username='+people.Email
-                    })
-                });
-                resolve(personas);
-            })
+
+            sp.web.siteUsers.filter("startswith(Title,'" + filterText + "') or startswith(Email,'" + filterText + "') or startswith(Title,'" + filterWithFirstUpperCase + "') or startswith(Email,'" + filterWithFirstUpperCase + "')")
+                .get().then((peoples: any) => {
+                    peoples.forEach(people => {
+                        personas.push({
+                            primaryText: people.Title,
+                            secondaryText: people.Email,
+                            imageUrl: '/_layouts/15/userphoto.aspx?size=s&username=' + people.Email
+                        })
+                    });
+                    resolve(personas);
+                })
         })
     }
 }

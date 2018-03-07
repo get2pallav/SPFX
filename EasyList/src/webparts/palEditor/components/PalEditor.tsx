@@ -9,11 +9,14 @@ import { assign, autobind, BaseComponent } from 'office-ui-fabric-react/lib/Util
 import { IPeoplePickerItemProps, IPersonaWithMenu } from 'office-ui-fabric-react/lib/components/pickers/PeoplePicker/PeoplePickerItems/PeoplePickerItem.types';
 import { ELHelper, IPeopleResultsProps } from '../../Helpers/helper';
 import { DefaultButton } from 'office-ui-fabric-react/lib/Button';
+import { DetailsList, DetailsListLayoutMode, Selection, IColumn } from 'office-ui-fabric-react/lib/DetailsList';
 
 export interface IPalEditorState {
   peopleList?: IPersonaProps[];
   mostRecentlyUsed?: IPersonaProps[];
   currentSelectedPersona?: IPersonaProps[];
+  userProfileProperties?: any[];
+  columns?:IColumn[];
 }
 const suggestionProps: IBasePickerSuggestionsProps = {
   suggestionsHeaderText: 'Suggested People',
@@ -25,23 +28,49 @@ const suggestionProps: IBasePickerSuggestionsProps = {
   suggestionsContainerAriaLabel: 'Suggested contacts'
 };
 
+
 export default class PalEditor extends React.Component<IPalEditorProps, IPalEditorState> {
   private _picker: IBasePicker<IPersonaProps>;
+  private _columns: IColumn[] = [
+    {
+      key: 'column1',
+      name: 'Property Name',
+      minWidth: 200,
+      fieldName: 'Key',
+      isResizable: true,
+      isSorted: false,
+      onColumnClick:this._onNameColumnClick.bind(this),
+      isSortedDescending:false
+    },
+    {
+      key: 'column2',
+      name: 'Value',
+      minWidth: 400,
+      fieldName: 'Value',
+      isResizable: true,
+      isMultiline: true
+    }
+  ];
 
   constructor(props: IPalEditorProps) {
     super(props);
     this.state = {
       mostRecentlyUsed: [],
       currentSelectedPersona: [],
-      peopleList: []
+      peopleList: [],
+      userProfileProperties: [],
+      columns:this._columns
     }
   }
   public render(): React.ReactElement<IPalEditorProps> {
     return (
+
       <div id="palEditor">
         {this.loadNormalPeoplePicker()}
-        <br/>
+        <br />
         <DefaultButton primary={true} text="Get Properties" onClick={this.getUserProperties.bind(this)} />
+        <DetailsList items={this.state.userProfileProperties} columns={this.state.columns} layoutMode={DetailsListLayoutMode.justified} />
+        
       </div>
       //   <NormalPeoplePicker
       //   onResolveSuggestions={ this._onFilterChanged }
@@ -64,10 +93,54 @@ export default class PalEditor extends React.Component<IPalEditorProps, IPalEdit
     );
   }
 
-  private getUserProperties(){
-    console.log('okies');debugger;
-    ELHelper.getUserProperites(this.state.currentSelectedPersona[0].secondaryText);
+
+  private getUserProperties() {
+    ELHelper.getUserProperites(this.state.currentSelectedPersona[0].secondaryText).then((results: any[]) => {
+      this.setState({
+        userProfileProperties: results
+      });
+    })
   }
+  
+  private _onNameColumnClick(ev: React.MouseEvent<HTMLElement>, column: IColumn){
+    let {userProfileProperties} = this.state;
+     let newColumns: IColumn[] = this._columns.slice();
+     let newItems: any[] = userProfileProperties;
+     newColumns[0].isSorted = true;
+     newColumns[0].isSortedDescending = !newColumns[0].isSortedDescending;
+     
+     newItems = this._sortItems(newItems,newColumns[0].fieldName,newColumns[0].isSortedDescending);
+
+     this.setState({
+        columns:newColumns,
+        userProfileProperties:newItems
+     })
+  }
+
+  private _sortItems(items: any[], sortBy: string, descending = false): any[] {
+    if (descending) {
+      return items.sort((a: any, b: any) => {
+        if (a[sortBy] < b[sortBy]) {
+          return 1;
+        }
+        if (a[sortBy] > b[sortBy]) {
+          return -1;
+        }
+        return 0;
+      });
+    } else {
+      return items.sort((a: any, b: any) => {
+        if (a[sortBy] < b[sortBy]) {
+          return -1;
+        }
+        if (a[sortBy] > b[sortBy]) {
+          return 1;
+        }
+        return 0;
+      });
+    }
+  }
+
   private loadNormalPeoplePicker() {
     var peoplItems: IPeoplePickerProps = {
       onResolveSuggestions: this.onResolveSuggestion.bind(this),
@@ -112,10 +185,10 @@ export default class PalEditor extends React.Component<IPalEditorProps, IPalEdit
         mru.push(item);
     })
 
-    this.state = {
+    this.setState({
       currentSelectedPersona: selectedItems,
       mostRecentlyUsed: mru
-    }
+    })
     return new Promise<IPersonaProps[]>((resolve) => {
       if (filter.length > 2) {
         ELHelper.getPeopleResults(filter).then((results: IPersonaProps[]) => { resolve(results) })

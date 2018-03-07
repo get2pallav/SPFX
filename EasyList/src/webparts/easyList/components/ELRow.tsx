@@ -1,7 +1,6 @@
 import * as React from 'react';
 import * as DateFormat from 'dateformat';
 import { ELHelper } from '../../Helpers/helper';
-import * as $ from 'jquery';
 export interface IELRowProp {
     item: any,
     Fields: string[],

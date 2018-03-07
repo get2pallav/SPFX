@@ -20,7 +20,7 @@
     "@types/react-dom": "15.5.6",
     "@types/webpack-env": ">=1.12.1 <1.14.0",
     "dateformat": "^3.0.2",
-    "jquery": "^3.2.1",
+    "jquery": "^3.3.1",
     "npm": "^5.7.1",
     "office-ui-fabric-react": "^5.57.0",
     "react": "15.6.2",
