@@ -6,7 +6,6 @@ import {
 import { IPersonaProps } from 'office-ui-fabric-react/lib/Persona';
 import * as $ from 'jquery';
 
-
 export interface IPeopleResultsProps {
     jobTitle: string,
     PictureUrl: string,
@@ -64,16 +63,48 @@ export class ELHelper {
         })
     }
 
-    static getUserProperites(user: string):Promise<any[]> {
-        return new Promise<any>((resolve)=>{
-        $.getJSON("/_api/SP.UserProfiles.PeopleManager/GetPropertiesFor(@v)?@v='i:0%23.f|membership|" + user + "'").then(
-            (result) => {
+    static getUserProperites(user: string): Promise<any[]> {
+        return new Promise<any>((resolve) => {
+            $.getJSON("/_api/SP.UserProfiles.PeopleManager/GetPropertiesFor(@v)?@v='i:0%23.f|membership|" + user + "'").then(
+                (result) => {
                     resolve(result.UserProfileProperties);
-            });
+                });
         })
 
     }
 
+    static getTanentUrl(): Promise<string> {
+        return new Promise<string>((resolve) => {
+            sp.site.getWebUrlFromPageUrl(window.location.href).then(
+                (result) => {
+                    var res = result.split(".sharepoint.com")
+                    var adminUrl = res[0] + "-admin.sharepoint.com";
+                    resolve(adminUrl);
+                }
+            )
+        });
+    }
+    static setUserProperty(): boolean {
+
+    //    // const p:SPHttpClient = SPHttpClient.
+    
+
+    //     $.ajax({
+    //         url: this.getTanentUrl() + "/_api/SP.UserProfiles.PeopleManager/SetSingleValueProfileProperty",
+    //         type: "POST",
+    //         header: requestHeaders,
+    //         data: JSON.stringify(userData),
+    //         success: function (data) {
+    //             console.log(data);
+    //         },
+    //         error: function (error) {
+    //             console.log(error)
+    //         }
+
+    //     })
+
+       return false;
+    }
     static getPeopleResults(filterText?: string): Promise<IPersonaProps[]> {
         return new Promise<IPersonaProps[]>((resolve) => {
             let personas: IPersonaProps[] = [];

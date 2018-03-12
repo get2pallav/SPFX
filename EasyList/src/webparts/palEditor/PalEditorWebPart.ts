@@ -16,12 +16,14 @@ export interface IPalEditorWebPartProps {
 }
 
 export default class PalEditorWebPart extends BaseClientSideWebPart<IPalEditorWebPartProps> {
-
+  
   public render(): void {
+    
     const element: React.ReactElement<IPalEditorProps > = React.createElement(
       PalEditor,
       {
-        description: this.properties.description
+        description: this.properties.description,
+        context:this.context
       }
     );
 

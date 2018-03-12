@@ -10,13 +10,19 @@ import { IPeoplePickerItemProps, IPersonaWithMenu } from 'office-ui-fabric-react
 import { ELHelper, IPeopleResultsProps } from '../../Helpers/helper';
 import { DefaultButton } from 'office-ui-fabric-react/lib/Button';
 import { DetailsList, DetailsListLayoutMode, Selection, IColumn } from 'office-ui-fabric-react/lib/DetailsList';
+import { TextField } from 'office-ui-fabric-react/lib/textfield';
+import { Label } from 'office-ui-fabric-react/lib/Label';
+import * as $ from 'jquery';
+import { SPHttpClient, ISPHttpClientOptions, SPHttpClientConfiguration, SPHttpClientResponse } from '@microsoft/sp-http';
 
 export interface IPalEditorState {
   peopleList?: IPersonaProps[];
   mostRecentlyUsed?: IPersonaProps[];
   currentSelectedPersona?: IPersonaProps[];
   userProfileProperties?: any[];
-  columns?:IColumn[];
+  columns?: IColumn[];
+  tanentUrl?: string;
+  showProertyDiv: boolean;
 }
 const suggestionProps: IBasePickerSuggestionsProps = {
   suggestionsHeaderText: 'Suggested People',
@@ -39,8 +45,8 @@ export default class PalEditor extends React.Component<IPalEditorProps, IPalEdit
       fieldName: 'Key',
       isResizable: true,
       isSorted: false,
-      onColumnClick:this._onNameColumnClick.bind(this),
-      isSortedDescending:false
+      onColumnClick: this._onNameColumnClick.bind(this),
+      isSortedDescending: false
     },
     {
       key: 'column2',
@@ -59,62 +65,95 @@ export default class PalEditor extends React.Component<IPalEditorProps, IPalEdit
       currentSelectedPersona: [],
       peopleList: [],
       userProfileProperties: [],
-      columns:this._columns
+      columns: this._columns,
+      tanentUrl: "",
+      showProertyDiv: false
     }
   }
   public render(): React.ReactElement<IPalEditorProps> {
     return (
 
       <div id="palEditor">
+        <Label>People Picker</Label>
         {this.loadNormalPeoplePicker()}
         <br />
-        <DefaultButton primary={true} text="Get Properties" onClick={this.getUserProperties.bind(this)} />
-        <DetailsList items={this.state.userProfileProperties} columns={this.state.columns} layoutMode={DetailsListLayoutMode.justified} />
-        
+        <div style={{ marginLeft: 200 }}>
+          <DefaultButton primary={true} text="Get Properties" onClick={this.getUserProperties.bind(this)} style={{ marginRight: 20 }} />
+        </div>
+
+        <table>
+          <tr><td>
+            <text>Update Property for {this.state.currentSelectedPersona && this.state.currentSelectedPersona[0] ? this.state.currentSelectedPersona[0].secondaryText : "'Logged In User'"}</text> 
+          </td></tr>
+          <tr><td style={{width:500}}>
+            <TextField underlined label="Property Name" id="PropertyName" /> <TextField underlined label="Property Value" id="PropertyValue" />
+          </td><td style={{width:300}}>
+              <DefaultButton primary={true} text="Update Property" onClick={this.showTenantDiv.bind(this)} />
+            </td></tr>
+        </table>
+        {this.state.showProertyDiv ? (
+          <div id="propertyList">
+            <DetailsList items={this.state.userProfileProperties} columns={this.state.columns} layoutMode={DetailsListLayoutMode.justified} />
+          </div>
+        ) : (<div></div>)}
+
       </div>
-      //   <NormalPeoplePicker
-      //   onResolveSuggestions={ this._onFilterChanged }
-      //   onEmptyInputFocus={ this._returnMostRecentlyUsed }
-      //   getTextFromItem={ this._getTextFromItem }
-      //   pickerSuggestionsProps={ suggestionProps }
-      //   className={ 'ms-PeoplePicker' }
-      //   key={ 'normal' }
-      //   onRemoveSuggestion={ this._onRemoveSuggestion }
-      //   onValidateInput={ this._validateInput }
-      //   removeButtonAriaLabel={ 'Remove' }
-      //   inputProps={ {
-      //     onBlur: (ev: React.FocusEvent<HTMLInputElement>) => console.log('onBlur called'),
-      //     onFocus: (ev: React.FocusEvent<HTMLInputElement>) => console.log('onFocus called'),
-      //     'aria-label': 'People Picker'
-      //   } }
-      //   componentRef={ this._resolveRef('_picker') }
-      //   onInputChange={ this._onInputChange }
-      // />
     );
   }
 
 
   private getUserProperties() {
-    ELHelper.getUserProperites(this.state.currentSelectedPersona[0].secondaryText).then((results: any[]) => {
+    if (this.state.currentSelectedPersona.length > 0 && this.state.currentSelectedPersona[0].secondaryText != "")
+      ELHelper.getUserProperites(this.state.currentSelectedPersona[0].secondaryText).then((results: any[]) => {
+        this.setState({
+          userProfileProperties: results,
+          showProertyDiv: true
+        });
+      })
+    else {
       this.setState({
-        userProfileProperties: results
-      });
+        showProertyDiv: false
+      })
+    }
+  }
+
+  private getTanentUrl() {
+
+    ELHelper.getTanentUrl().then((result) => {
+      this.setState({
+        tanentUrl: result
+      })
     })
   }
-  
-  private _onNameColumnClick(ev: React.MouseEvent<HTMLElement>, column: IColumn){
-    let {userProfileProperties} = this.state;
-     let newColumns: IColumn[] = this._columns.slice();
-     let newItems: any[] = userProfileProperties;
-     newColumns[0].isSorted = true;
-     newColumns[0].isSortedDescending = !newColumns[0].isSortedDescending;
-     
-     newItems = this._sortItems(newItems,newColumns[0].fieldName,newColumns[0].isSortedDescending);
 
-     this.setState({
-        columns:newColumns,
-        userProfileProperties:newItems
-     })
+  private showTenantDiv() {
+
+    var userData = {
+      'accountName': "i:0#.f|membership|pallav.mathur@cox.com",
+      'propertyName': $("#PropertyName")[0].value, //can also be used to set custom single value profile properties
+      'propertyValue': $("#PropertyValue")[0].value
+    }
+    const opt: ISPHttpClientOptions = { headers: { 'Content-Type': 'application/json;odata=nometadata' }, body: JSON.stringify(userData) };
+
+    this.props.context.spHttpClient.post("/_api/SP.UserProfiles.PeopleManager/SetSingleValueProfileProperty",
+      SPHttpClient.configurations.v1, opt)
+      .then((response: SPHttpClientResponse) => { console.log(response) })
+      .catch((error: SPHttpClientResponse) => { console.log(error) });
+  }
+
+  private _onNameColumnClick(ev: React.MouseEvent<HTMLElement>, column: IColumn) {
+    let { userProfileProperties } = this.state;
+    let newColumns: IColumn[] = this._columns.slice();
+    let newItems: any[] = userProfileProperties;
+    newColumns[0].isSorted = true;
+    newColumns[0].isSortedDescending = !newColumns[0].isSortedDescending;
+
+    newItems = this._sortItems(newItems, newColumns[0].fieldName, newColumns[0].isSortedDescending);
+
+    this.setState({
+      columns: newColumns,
+      userProfileProperties: newItems
+    })
   }
 
   private _sortItems(items: any[], sortBy: string, descending = false): any[] {
@@ -150,7 +189,6 @@ export default class PalEditor extends React.Component<IPalEditorProps, IPalEdit
       onEmptyInputFocus: this.returnMostRecenlyUsed.bind(this),
       className: 'ms-PeoplePicker',
       onRemoveSuggestion: (item: IPersonaProps) => { this.onRemoveSuggestion(item) },
-      componentRef: (component?: IBasePicker<IPersonaProps>) => { this._picker = component; console.log(this._picker) },
       inputProps: {
         onBlur: (ev: React.FocusEvent<HTMLInputElement>) => console.log('onBlur called'),
         onFocus: (ev: React.FocusEvent<HTMLInputElement>) => console.log('onFocus called'),
@@ -198,6 +236,11 @@ export default class PalEditor extends React.Component<IPalEditorProps, IPalEdit
   }
 
   private _onItemsChange(items: any[]) {
+    if (items.length == 0) {
+      this.setState({
+        showProertyDiv: false
+      })
+    }
     this.setState({
       currentSelectedPersona: items
     });
