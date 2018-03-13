@@ -2,7 +2,6 @@ import * as React from 'react';
 import styles from './PalEditor.module.scss';
 import { IPalEditorProps } from './IPalEditorProps';
 import { escape } from '@microsoft/sp-lodash-subset';
-const ClassicEditor = require('@ckeditor/ckeditor5-build-classic');
 import { IPeoplePickerProps, NormalPeoplePicker, IBasePickerSuggestionsProps, IBasePicker } from 'office-ui-fabric-react/lib/Pickers';
 import { IPersonaProps, Persona } from 'office-ui-fabric-react/lib/Persona';
 import { assign, autobind, BaseComponent } from 'office-ui-fabric-react/lib/Utilities';
@@ -89,6 +88,8 @@ export default class PalEditor extends React.Component<IPalEditorProps, IPalEdit
               <DefaultButton primary={true} text="Update Property" onClick={this.showTenantDiv.bind(this)} />
             </td></tr>
         </table>
+        <text id="resultPropertyUpdate"></text>
+
         {this.state.showProertyDiv ? (
           <div id="propertyList">
             <DetailsList items={this.state.userProfileProperties} columns={this.state.columns} layoutMode={DetailsListLayoutMode.justified} />
@@ -116,29 +117,23 @@ export default class PalEditor extends React.Component<IPalEditorProps, IPalEdit
   }
 
   private showTenantDiv() {
+    let isCurrentUser: boolean = true;
+    let accountName: string = this.state.currentSelectedPersona.length > 0 ? this.state.currentSelectedPersona[0].secondaryText.toLowerCase() : this.props.context.pageContext.user.email.toLowerCase(); ;
 
-    var userData = {
-      'accountName': "i:0#.f|membership|" + this.state.currentSelectedPersona[0].secondaryText.toLowerCase(),
-      'propertyName': $("#PropertyName")[0].value, //can also be used to set custom single value profile properties
-      'propertyValue': $("#PropertyValue")[0].value
+    if (this.props.context.pageContext.user.email.toLowerCase() != accountName ) {
+      isCurrentUser = false;
     }
-    const opt: ISPHttpClientOptions = { headers: { 'Content-Type': 'application/json;odata=nometadata' }, body: JSON.stringify(userData) };
-
-
-    let url: string = "";
-    if (this.props.context.pageContext.user.email.toLowerCase() == this.state.currentSelectedPersona[0].secondaryText.toLowerCase()) {
-      url = this.props.context.pageContext.site.absoluteUrl + "/_api/SP.UserProfiles.PeopleManager/SetSingleValueProfileProperty";
-    }
-    else {
-      let currentUrl = this.props.context.pageContext.site.absoluteUrl;
-      var res = currentUrl.split(".sharepoint.com")
-      var adminUrl = res[0] + "-admin.sharepoint.com";
-      url = adminUrl + "/_api/SP.UserProfiles.PeopleManager/SetSingleValueProfileProperty";
-    }
-    this.props.context.spHttpClient.post(url,
-      SPHttpClient.configurations.v1, opt)
-      .then((response: SPHttpClientResponse) => { console.log(response) })
-      .catch((error: SPHttpClientResponse) => { console.log(error) });
+    ELHelper.setTenantUserProperty(true, "i:0#.f|membership|" + accountName, $("#PropertyName")[0].value, $("#PropertyValue")[0].value)
+      .then((result) => {
+        debugger;
+        let txt = "";
+        if (result && (result.status == 403 || result.status == 500))
+          txt = result.data.responseBody["odata.error"].message.value;
+        else
+          txt = "Property Saved !";
+        $("#resultPropertyUpdate").text(txt)
+      })
+      .catch((error) => { debugger; $("#resultPropertyUpdate").text(error.data.responseBody["odata.error"].message.value) })
   }
 
   private _onNameColumnClick(ev: React.MouseEvent<HTMLElement>, column: IColumn) {
@@ -271,15 +266,4 @@ export default class PalEditor extends React.Component<IPalEditorProps, IPalEdit
     })
     return new Promise<IPersonaProps[]>((resolve) => { resolve(mostRecentlyUsed) });
   }
-
-  private getCKeditor(): void {
-    ClassicEditor.create(document.querySelector("#palEditor"))
-      .then(editor => {
-        console.log(editor);
-      })
-      .error(error => {
-        console.log(error)
-      })
-  }
-
 }

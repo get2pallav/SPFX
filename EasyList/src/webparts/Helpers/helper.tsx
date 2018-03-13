@@ -11,14 +11,6 @@ export interface IPeopleResultsProps {
     PictureUrl: string,
     PreferredName: string
 }
-//import { Screwdriver,IScrewdriverSettings } from 'sp-screwdriver';
-require('sp-init');
-require('microsoft-ajax');
-require('sp-runtime');
-require('sharepointOnline');
-require('sharepointOnline-userprofile')
-
-
 
 export class ELHelper {
     static checkIfListExists(listName: string): Promise<boolean> {
@@ -81,38 +73,44 @@ export class ELHelper {
 
     }
 
-    static setTenantUserProperty(){
-        
-        // const context: = new SP.ClientContext("https://codesignedintranet-admin.sharepoint.com");
-        // const peopleManager: SP.UserProfiles.PeopleManager = new SP.UserProfiles.PeopleManager(context);
+    static setTenantUserProperty(isCurremtUser: boolean, userAccount: string, propertyName: string, propertyValue: string): Promise<any> {
+
+        //  const context:SP.ClientContext = new SP.ClientContext("https://codesignedintranet-admin.sharepoint.com");
+        //  const peopleManager: SP.UserProfiles.PeopleManager = new SP.UserProfiles.PeopleManager(context);
         // let userAccount = "i:0#.f|membership|brian@codesignedintranet.onmicrosoft.com";
 
-         
-    
-            
-        sp.configure({
-            
-        },"")        
-       // peopleManager.
-      //  peopleManager.setSingleValuedProfileProperty(userAccount,"AboutMe","Brain");
+        return new Promise<any>((resolve) => {
+            sp.profiles.setSingleValueProfileProperty(userAccount, propertyName, propertyValue)
+                .then((result) => { resolve(result) })
+                .catch((error) => { resolve(error) })
+        })
 
-    //    const setting:IScrewdriverSettings = {
-    //     siteUrl:"https://codesignedintranet-admin.sharepoint.com"
-    //    }
 
-    //    let s = new Screwdriver(setting);
-    //    s.ups.setSingleValueProfileProperty({
-    //        baseUrl:"https://codesignedintranet-admin.sharepoint.com",
-    //        propertyName:"AboutMe",
-    //        accountName:userAccount,
-    //        propertyValue:"Hi"
-    //    })
-       
+
+
+        //   sp.configure({
+
+        //    },"")        
+        // peopleManager.
+        //  peopleManager.setSingleValuedProfileProperty(userAccount,"AboutMe","Brain");
+
+        //    const setting:IScrewdriverSettings = {
+        //     siteUrl:"https://codesignedintranet-admin.sharepoint.com"
+        //    }
+
+        //    let s = new Screwdriver(setting);
+        //    s.ups.setSingleValueProfileProperty({
+        //        baseUrl:"https://codesignedintranet-admin.sharepoint.com",
+        //        propertyName:"AboutMe",
+        //        accountName:userAccount,
+        //        propertyValue:"Hi"
+        //    })
+
     }
 
     static getCurrentUserEmail(): Promise<string> {
-        return new Promise<string>((resolve)=>{
-            sp.web.currentUser.select("Email").get().then((result)=>{
+        return new Promise<string>((resolve) => {
+            sp.web.currentUser.select("Email").get().then((result) => {
                 resolve(result.Email)
             })
         })
