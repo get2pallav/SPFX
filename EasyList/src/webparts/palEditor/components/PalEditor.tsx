@@ -21,7 +21,6 @@ export interface IPalEditorState {
   currentSelectedPersona?: IPersonaProps[];
   userProfileProperties?: any[];
   columns?: IColumn[];
-  tanentUrl?: string;
   showProertyDiv: boolean;
 }
 const suggestionProps: IBasePickerSuggestionsProps = {
@@ -66,7 +65,6 @@ export default class PalEditor extends React.Component<IPalEditorProps, IPalEdit
       peopleList: [],
       userProfileProperties: [],
       columns: this._columns,
-      tanentUrl: "",
       showProertyDiv: false
     }
   }
@@ -83,11 +81,11 @@ export default class PalEditor extends React.Component<IPalEditorProps, IPalEdit
 
         <table>
           <tr><td>
-            <text>Update Property for {this.state.currentSelectedPersona && this.state.currentSelectedPersona[0] ? this.state.currentSelectedPersona[0].secondaryText : "'Logged In User'"}</text> 
+            <text>Update Property for {this.state.currentSelectedPersona && this.state.currentSelectedPersona[0] ? this.state.currentSelectedPersona[0].secondaryText : "'Logged In User'"}</text>
           </td></tr>
-          <tr><td style={{width:500}}>
+          <tr><td style={{ width: 500 }}>
             <TextField underlined label="Property Name" id="PropertyName" /> <TextField underlined label="Property Value" id="PropertyValue" />
-          </td><td style={{width:300}}>
+          </td><td style={{ width: 300 }}>
               <DefaultButton primary={true} text="Update Property" onClick={this.showTenantDiv.bind(this)} />
             </td></tr>
         </table>
@@ -117,25 +115,27 @@ export default class PalEditor extends React.Component<IPalEditorProps, IPalEdit
     }
   }
 
-  private getTanentUrl() {
-
-    ELHelper.getTanentUrl().then((result) => {
-      this.setState({
-        tanentUrl: result
-      })
-    })
-  }
-
   private showTenantDiv() {
 
     var userData = {
-      'accountName': "i:0#.f|membership|pallav.mathur@cox.com",
+      'accountName': "i:0#.f|membership|" + this.state.currentSelectedPersona[0].secondaryText.toLowerCase(),
       'propertyName': $("#PropertyName")[0].value, //can also be used to set custom single value profile properties
       'propertyValue': $("#PropertyValue")[0].value
     }
     const opt: ISPHttpClientOptions = { headers: { 'Content-Type': 'application/json;odata=nometadata' }, body: JSON.stringify(userData) };
 
-    this.props.context.spHttpClient.post("/_api/SP.UserProfiles.PeopleManager/SetSingleValueProfileProperty",
+
+    let url: string = "";
+    if (this.props.context.pageContext.user.email.toLowerCase() == this.state.currentSelectedPersona[0].secondaryText.toLowerCase()) {
+      url = this.props.context.pageContext.site.absoluteUrl + "/_api/SP.UserProfiles.PeopleManager/SetSingleValueProfileProperty";
+    }
+    else {
+      let currentUrl = this.props.context.pageContext.site.absoluteUrl;
+      var res = currentUrl.split(".sharepoint.com")
+      var adminUrl = res[0] + "-admin.sharepoint.com";
+      url = adminUrl + "/_api/SP.UserProfiles.PeopleManager/SetSingleValueProfileProperty";
+    }
+    this.props.context.spHttpClient.post(url,
       SPHttpClient.configurations.v1, opt)
       .then((response: SPHttpClientResponse) => { console.log(response) })
       .catch((error: SPHttpClientResponse) => { console.log(error) });

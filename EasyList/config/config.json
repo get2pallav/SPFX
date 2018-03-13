@@ -23,5 +23,38 @@
     "easyListStrings": "lib/webparts/easyList/loc/{locale}.js",
     "PalEditorWebPartStrings": "lib/webparts/palEditor/loc/{locale}.js"
   },
-  "externals": {}
+  "externals": {
+    "sp-init": {
+      "path": "https://static.sharepointonline.com/bld/_layouts/15/16.0.7428.1205/init.js",
+      "globalName": "$_global_init"
+    },
+    "microsoft-ajax": {
+      "path": "https://static.sharepointonline.com/bld/_layouts/15/16.0.7428.1205/MicrosoftAjax.js",
+      "globalName": "Sys",
+      "globalDependencies": [
+        "sp-init"
+      ]
+    },
+    "sp-runtime": {
+      "path": "https://static.sharepointonline.com/bld/_layouts/15/16.0.7428.1205/SP.Runtime.js",
+      "globalName": "SP",
+      "globalDependencies": [
+        "microsoft-ajax"
+      ]
+    },
+    "sharepointOnline": {
+      "path": "https://static.sharepointonline.com/bld/_layouts/15/16.0.7428.1205/SP.js",
+      "globalName": "SP",
+      "globalDependencies": [
+        "sp-runtime"
+      ]
+    },
+    "sharepointOnline-userprofile": {
+      "path": "https://static.sharepointonline.com/bld/_layouts/15/16.0.7428.1205/sp.userprofiles.js",
+      "globalName": "SP",
+      "globalDependencies": [
+        "sharepointOnline"
+      ]
+    }
+  }
 }

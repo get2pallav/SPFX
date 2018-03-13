@@ -13,19 +13,21 @@
     "@microsoft/sp-office-ui-fabric-core": "~1.4.1",
     "@microsoft/sp-webpart-base": "~1.4.1",
     "@types/es6-collections": "^0.5.31",
+    "@types/microsoft-ajax": "0.0.33",
     "@types/react": "15.6.6",
     "@types/react-addons-shallow-compare": "0.14.17",
     "@types/react-addons-test-utils": "0.14.15",
     "@types/react-addons-update": "0.14.14",
     "@types/react-dom": "15.5.6",
+    "@types/sharepoint": "^2016.1.0",
     "@types/webpack-env": ">=1.12.1 <1.14.0",
     "dateformat": "^3.0.2",
     "jquery": "^3.3.1",
     "npm": "^5.7.1",
-    "office-ui-fabric-react": "^5.57.0",
+    "office-ui-fabric-react": "^5.63.0",
     "react": "15.6.2",
     "react-dom": "15.6.2",
-    "sp-pnp-js": "^3.0.1"
+    "sp-pnp-js": "^3.0.6"
   },
   "devDependencies": {
     "@microsoft/sp-build-web": "~1.4.1",

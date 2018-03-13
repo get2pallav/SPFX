@@ -11,6 +11,14 @@ export interface IPeopleResultsProps {
     PictureUrl: string,
     PreferredName: string
 }
+//import { Screwdriver,IScrewdriverSettings } from 'sp-screwdriver';
+require('sp-init');
+require('microsoft-ajax');
+require('sp-runtime');
+require('sharepointOnline');
+require('sharepointOnline-userprofile')
+
+
 
 export class ELHelper {
     static checkIfListExists(listName: string): Promise<boolean> {
@@ -73,38 +81,43 @@ export class ELHelper {
 
     }
 
-    static getTanentUrl(): Promise<string> {
-        return new Promise<string>((resolve) => {
-            sp.site.getWebUrlFromPageUrl(window.location.href).then(
-                (result) => {
-                    var res = result.split(".sharepoint.com")
-                    var adminUrl = res[0] + "-admin.sharepoint.com";
-                    resolve(adminUrl);
-                }
-            )
-        });
-    }
-    static setUserProperty(): boolean {
+    static setTenantUserProperty(){
+        
+        // const context: = new SP.ClientContext("https://codesignedintranet-admin.sharepoint.com");
+        // const peopleManager: SP.UserProfiles.PeopleManager = new SP.UserProfiles.PeopleManager(context);
+        // let userAccount = "i:0#.f|membership|brian@codesignedintranet.onmicrosoft.com";
 
-    //    // const p:SPHttpClient = SPHttpClient.
+         
     
+            
+        sp.configure({
+            
+        },"")        
+       // peopleManager.
+      //  peopleManager.setSingleValuedProfileProperty(userAccount,"AboutMe","Brain");
 
-    //     $.ajax({
-    //         url: this.getTanentUrl() + "/_api/SP.UserProfiles.PeopleManager/SetSingleValueProfileProperty",
-    //         type: "POST",
-    //         header: requestHeaders,
-    //         data: JSON.stringify(userData),
-    //         success: function (data) {
-    //             console.log(data);
-    //         },
-    //         error: function (error) {
-    //             console.log(error)
-    //         }
+    //    const setting:IScrewdriverSettings = {
+    //     siteUrl:"https://codesignedintranet-admin.sharepoint.com"
+    //    }
 
-    //     })
-
-       return false;
+    //    let s = new Screwdriver(setting);
+    //    s.ups.setSingleValueProfileProperty({
+    //        baseUrl:"https://codesignedintranet-admin.sharepoint.com",
+    //        propertyName:"AboutMe",
+    //        accountName:userAccount,
+    //        propertyValue:"Hi"
+    //    })
+       
     }
+
+    static getCurrentUserEmail(): Promise<string> {
+        return new Promise<string>((resolve)=>{
+            sp.web.currentUser.select("Email").get().then((result)=>{
+                resolve(result.Email)
+            })
+        })
+    }
+
     static getPeopleResults(filterText?: string): Promise<IPersonaProps[]> {
         return new Promise<IPersonaProps[]>((resolve) => {
             let personas: IPersonaProps[] = [];
