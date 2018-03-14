@@ -1,6 +1,8 @@
 import {
     sp,
-    ListEnsureResult
+    ListEnsureResult,
+    ClientSidePageLayoutType,
+    ClientSidePage, ClientSideWebpart, CanvasColumn, WebPartsPersonalizationScope, ClientSideText
 
 } from 'sp-pnp-js';
 import { IPersonaProps } from 'office-ui-fabric-react/lib/Persona';
@@ -14,7 +16,6 @@ export interface IPeopleResultsProps {
 
 export class ELHelper {
     static checkIfListExists(listName: string): Promise<boolean> {
-
         return new Promise<boolean>((resolve) => {
             sp.web.lists.getByTitle(listName).get()
                 .then(() => {
@@ -49,6 +50,7 @@ export class ELHelper {
     }
 
     static getSiteUsers(): Promise<IPersonaProps[]> {
+
         return new Promise<IPersonaProps[]>((resolve) => {
             let personas: IPersonaProps[] = [];
             sp.web.siteUsers.get().then((peoples: any) => {
@@ -74,45 +76,30 @@ export class ELHelper {
     }
 
     static setTenantUserProperty(isCurremtUser: boolean, userAccount: string, propertyName: string, propertyValue: string): Promise<any> {
-
-        //  const context:SP.ClientContext = new SP.ClientContext("https://codesignedintranet-admin.sharepoint.com");
-        //  const peopleManager: SP.UserProfiles.PeopleManager = new SP.UserProfiles.PeopleManager(context);
-        // let userAccount = "i:0#.f|membership|brian@codesignedintranet.onmicrosoft.com";
-
         return new Promise<any>((resolve) => {
             sp.profiles.setSingleValueProfileProperty(userAccount, propertyName, propertyValue)
                 .then((result) => { resolve(result) })
                 .catch((error) => { resolve(error) })
         })
-
-
-
-
-        //   sp.configure({
-
-        //    },"")        
-        // peopleManager.
-        //  peopleManager.setSingleValuedProfileProperty(userAccount,"AboutMe","Brain");
-
-        //    const setting:IScrewdriverSettings = {
-        //     siteUrl:"https://codesignedintranet-admin.sharepoint.com"
-        //    }
-
-        //    let s = new Screwdriver(setting);
-        //    s.ups.setSingleValueProfileProperty({
-        //        baseUrl:"https://codesignedintranet-admin.sharepoint.com",
-        //        propertyName:"AboutMe",
-        //        accountName:userAccount,
-        //        propertyValue:"Hi"
-        //    })
-
     }
 
-    static getCurrentUserEmail(): Promise<string> {
-        return new Promise<string>((resolve) => {
-            sp.web.currentUser.select("Email").get().then((result) => {
-                resolve(result.Email)
+    static createNewPage() {
+
+        sp.web.addClientSidePage("ThisIsHowItsGoingToBe.aspx","This is how its going to be").then((result: ClientSidePage) => {
+
+
+            let wp: ClientSideText = new ClientSideText("Text");
+            result.checkout().then(() => {
+                result.addSection().addControl(new ClientSideText("Hello its from Pallav"));
+
+                result.addSection().addColumn(6).addControl(new ClientSideText("This is a new one"));
+                result.save().then(() => {
+
+                })
             })
+            // let v:LimitedWebPartManager =   result.getLimitedWebPartManager(WebPartsPersonalizationScope.Shared);
+            //  v.webparts.append("")
+
         })
     }
 

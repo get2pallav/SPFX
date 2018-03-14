@@ -96,6 +96,7 @@ export default class PalEditor extends React.Component<IPalEditorProps, IPalEdit
           </div>
         ) : (<div></div>)}
 
+         <DefaultButton primary={true} text="Create Page" onClick={this.createPage.bind(this)} />
       </div>
     );
   }
@@ -114,6 +115,9 @@ export default class PalEditor extends React.Component<IPalEditorProps, IPalEdit
         showProertyDiv: false
       })
     }
+  }
+  private createPage(){
+    ELHelper.createNewPage();
   }
 
   private showTenantDiv() {
