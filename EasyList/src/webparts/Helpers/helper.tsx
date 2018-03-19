@@ -2,7 +2,7 @@ import {
     sp,
     ListEnsureResult,
     ClientSidePageLayoutType,
-    ClientSidePage, ClientSideWebpart, CanvasColumn, WebPartsPersonalizationScope, ClientSideText
+    ClientSidePage, ClientSideWebpart, CanvasColumn, WebPartsPersonalizationScope, ClientSideText, ClientSidePageComponent
 
 } from 'sp-pnp-js';
 import { IPersonaProps } from 'office-ui-fabric-react/lib/Persona';
@@ -83,14 +83,20 @@ export class ELHelper {
         })
     }
 
-    static createNewPage() {
+    static createNewPage(pageName: string) {
 
-        sp.web.addClientSidePage("ThisIsHowItsGoingToBe.aspx","This is how its going to be").then((result: ClientSidePage) => {
+        let pageTitle: string = encodeURI(pageName);
+        sp.web.addClientSidePage(pageTitle + ".aspx", pageName).then((result: ClientSidePage) => {
 
+            sp.web.getClientSideWebParts().then((cwps: ClientSidePageComponent[]) => {
+                console.log(cwps);
+            })
 
-            let wp: ClientSideText = new ClientSideText("Text");
+            let wp: ClientSideWebpart = new ClientSideWebpart("EasyList");
+            wp.webPartId = "fce9c774-6c5e-46e6-8582-ebb8c6634f93";
+
             result.checkout().then(() => {
-                result.addSection().addControl(new ClientSideText("Hello its from Pallav"));
+                result.addSection().addControl(wp);
 
                 result.addSection().addColumn(6).addControl(new ClientSideText("This is a new one"));
                 result.save().then(() => {

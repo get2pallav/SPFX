@@ -17,11 +17,20 @@
           "manifest": "./src/webparts/palEditor/PalEditorWebPart.manifest.json"
         }
       ]
+    },
+    "i-pro-news-feed-web-part": {
+      "components": [
+        {
+          "entrypoint": "./lib/webparts/iProNewsFeed/IProNewsFeedWebPart.js",
+          "manifest": "./src/webparts/iProNewsFeed/IProNewsFeedWebPart.manifest.json"
+        }
+      ]
     }
   },
   "localizedResources": {
     "easyListStrings": "lib/webparts/easyList/loc/{locale}.js",
-    "PalEditorWebPartStrings": "lib/webparts/palEditor/loc/{locale}.js"
+    "PalEditorWebPartStrings": "lib/webparts/palEditor/loc/{locale}.js",
+    "IProNewsFeedWebPartStrings": "lib/webparts/iProNewsFeed/loc/{locale}.js"
   },
   "externals": {
     "sp-init": {
