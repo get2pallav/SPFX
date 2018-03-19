@@ -83,28 +83,54 @@ export class ELHelper {
         })
     }
 
-    static createNewPage(pageName: string) {
+    static createNewPage(pageName: string): Promise<string> {
 
         let pageTitle: string = encodeURI(pageName);
-        sp.web.addClientSidePage(pageTitle + ".aspx", pageName).then((result: ClientSidePage) => {
 
-            sp.web.getClientSideWebParts().then((cwps: ClientSidePageComponent[]) => {
-                console.log(cwps);
-            })
+        return new Promise<string>((resolve, reject) => {
+            sp.web.addClientSidePage(pageTitle + ".aspx", pageName).then((result: ClientSidePage) => {
 
-            let wp: ClientSideWebpart = new ClientSideWebpart("EasyList");
-            wp.webPartId = "fce9c774-6c5e-46e6-8582-ebb8c6634f93";
-
-            result.checkout().then(() => {
-                result.addSection().addControl(wp);
-
-                result.addSection().addColumn(6).addControl(new ClientSideText("This is a new one"));
-                result.save().then(() => {
-
+                sp.web.getClientSideWebParts().then((cwps: ClientSidePageComponent[]) => {
+                    let cw: ClientSidePageComponent = cwps.filter((wp) => { if (wp.ComponentType == 1 && wp.Name == "EasyList") return wp; })[0];
+                    console.log(cw);
+                    let jsonWp : any = JSON.parse(cw.Manifest);
+                    let wp: ClientSideWebpart = new ClientSideWebpart(jsonWp.alias);
+                    wp.webPartId = jsonWp.id;
+                    return wp;
                 })
+                    .then((wp: ClientSideWebpart) => {
+                        result.checkout().then(() => {
+                            result.addSection().addColumn(6).addControl(wp);
+                            result.addSection().addColumn(6).addControl(new ClientSideText("This is a new one"));
+                            result.save().then(() => {
+                                console.log(result);
+                                resolve("created")
+                            })
+                        })
+                    })
+
+                //  let wp: ClientSideWebpart = new ClientSideWebpart("EasyListWebPart");
+                //   wp.import()
+                //  wp.webPartId = "fce9c774-6c5e-46e6-8582-ebb8c6634f93";
+
+                // wp.propertieJson
+
+                //  console.log( wp.getProperties());
+
+                //    let v:ClientSidePageComponent;
+
+
+                //     result.checkout().then(() => {
+                //         result.addSection().addColumn(6).addControl(wp);
+
+
+                //         result.addSection().addColumn(6).addControl(new ClientSideText("This is a new one"));
+                //         result.save().then(() => {
+                //             console.log(result);
+                //             resolve( "created" )
+                //         })
+                //     })
             })
-            // let v:LimitedWebPartManager =   result.getLimitedWebPartManager(WebPartsPersonalizationScope.Shared);
-            //  v.webparts.append("")
 
         })
     }

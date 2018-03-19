@@ -121,7 +121,7 @@ export default class PalEditor extends React.Component<IPalEditorProps, IPalEdit
     }
   }
   private createPage(){
-    ELHelper.createNewPage($("#pageTitle")[0].value);
+   // ELHelper.createNewPage($("#pageTitle")[0].value);
   }
 
   private showTenantDiv() {
