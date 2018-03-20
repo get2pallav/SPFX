@@ -185,7 +185,7 @@ export default class PalEditor extends React.Component<IPalEditorProps, IPalEdit
 
   private loadNormalPeoplePicker() {
     var peoplItems: IPeoplePickerProps = {
-      onResolveSuggestions: this.onResolveSuggestion.bind(this),
+     onResolveSuggestions: this.onResolveSuggestion.bind(this),
       pickerSuggestionsProps: suggestionProps,
       getTextFromItem: (Item: IPersonaProps): string => { return Item.secondaryText as string },
       key: 'normal',
@@ -199,6 +199,7 @@ export default class PalEditor extends React.Component<IPalEditorProps, IPalEdit
       },
       onInputChange: this._onInputChange.bind(this),
       onChange: this._onItemsChange.bind(this),
+
 
     }
     return (

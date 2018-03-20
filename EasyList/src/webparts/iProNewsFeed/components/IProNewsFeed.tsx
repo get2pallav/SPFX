@@ -6,10 +6,14 @@ import { TextField } from 'office-ui-fabric-react/lib/textfield';
 import { DefaultButton } from 'office-ui-fabric-react/lib/Button';
 import { ELHelper } from '../../Helpers/helper';
 import * as $ from 'jquery';
-
+import iProButton,{IiProButtonProps} from '../../components/iProButton';
 
 export default class IProNewsFeed extends React.Component<IIProNewsFeedProps, {}> {
   public render(): React.ReactElement<IIProNewsFeedProps> {
+    let v:IiProButtonProps = {
+      text:"And New"
+    }
+
     return (
       <div>
         <label>Page Title</label>
@@ -17,6 +21,12 @@ export default class IProNewsFeed extends React.Component<IIProNewsFeedProps, {}
         <DefaultButton id="btnCreatePage" onClick={this.onCreatePageClick.bind(this)} text="Create Page" />
         <br />
         <label id="lblStatus" />
+       
+        { 
+          React.createElement(iProButton,{
+          text:"Add Article"
+        })}
+
         {/* <div className="vr vr_x5 vr_x6S vr_x10M">
           <div className="grid mix-grid_middle mix-grid_split">
             <div className="grid-col grid-col_12of12 grid-col_6of12S grid-col_8of12L">

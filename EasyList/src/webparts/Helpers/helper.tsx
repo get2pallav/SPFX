@@ -77,6 +77,7 @@ export class ELHelper {
 
     static setTenantUserProperty(isCurremtUser: boolean, userAccount: string, propertyName: string, propertyValue: string): Promise<any> {
         return new Promise<any>((resolve) => {
+
             sp.profiles.setSingleValueProfileProperty(userAccount, propertyName, propertyValue)
                 .then((result) => { resolve(result) })
                 .catch((error) => { resolve(error) })
