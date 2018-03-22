@@ -94,7 +94,7 @@ export class ELHelper {
                 sp.web.getClientSideWebParts().then((cwps: ClientSidePageComponent[]) => {
                     let cw: ClientSidePageComponent = cwps.filter((wp) => { if (wp.ComponentType == 1 && wp.Name == "EasyList") return wp; })[0];
                     console.log(cw);
-                    let jsonWp : any = JSON.parse(cw.Manifest);
+                    let jsonWp: any = JSON.parse(cw.Manifest);
                     let wp: ClientSideWebpart = new ClientSideWebpart(jsonWp.alias);
                     wp.webPartId = jsonWp.id;
                     return wp;
@@ -109,28 +109,6 @@ export class ELHelper {
                             })
                         })
                     })
-
-                //  let wp: ClientSideWebpart = new ClientSideWebpart("EasyListWebPart");
-                //   wp.import()
-                //  wp.webPartId = "fce9c774-6c5e-46e6-8582-ebb8c6634f93";
-
-                // wp.propertieJson
-
-                //  console.log( wp.getProperties());
-
-                //    let v:ClientSidePageComponent;
-
-
-                //     result.checkout().then(() => {
-                //         result.addSection().addColumn(6).addControl(wp);
-
-
-                //         result.addSection().addColumn(6).addControl(new ClientSideText("This is a new one"));
-                //         result.save().then(() => {
-                //             console.log(result);
-                //             resolve( "created" )
-                //         })
-                //     })
             })
 
         })
@@ -155,4 +133,74 @@ export class ELHelper {
                 })
         })
     }
+
+}
+
+export interface INewsArticle {
+    Title: string,
+    PreviewText: string,
+    PublishingContact: string,
+    PublishingRollupImage: string,
+    PublishingPageImage: string,
+    PublishingPageContent: string,
+    ArticleStartDate: string,
+    LikesCount: string,
+    LikedBy: string,
+    FileRef: string,
+    FileDirRef: string,
+    SocialThreadID: string,
+    Author: string,
+    Created: string,
+    ItemCount: number
+}
+export class iProHelper {
+    static getPageCount(webRealativePath:string):Promise<number>{
+        return new Promise<number>((resolve,reject)=>{
+            sp.web.getFolderByServerRelativePath(webRealativePath + "/pages/news").select("ItemCount").get().then((count)=>{
+                console.log(count.ItemCount);
+                resolve(count.ItemCount);
+            })
+        })
+    }
+    static getNewsArticles(webRealativePath: string): Promise<INewsArticle[]> {
+        return new Promise<INewsArticle[]>((resolve, reject) => {
+            sp.web.getFolderByServerRelativeUrl(webRealativePath + "/pages/news").files.top(4).select(
+                "ListItemAllFields/Title",
+                "ListItemAllFields/PreviewText",
+                "PublishingRollupImage",
+                "PublishingPageImage",
+                "ListItemAllFields/ArticleStartDate",
+                "ListItemAllFields/LikesCount",
+                "ListItemAllFields/LikedBy",
+                "ListItemAllFields/FileRef",
+                "Author",
+                "Created"
+            ).expand("ListItemAllFields").get().then((news) => {
+                console.log(news);
+                let articles: INewsArticle[] = news.map((news) => {
+                    let newsDetails = news.ListItemAllFields;
+                    let v: INewsArticle = {
+                        Title:newsDetails.Title,
+                        PreviewText: newsDetails.PreviewText,
+                        PublishingRollupImage: newsDetails.PublishingRollupImage,
+                        ArticleStartDate: newsDetails.ArticleStartDate,
+                        LikesCount: newsDetails.LikesCount,
+                        LikedBy:newsDetails.LikedBy,
+                        FileRef : newsDetails.FileRef,
+                        Author: newsDetails.Author,
+                        Created: newsDetails.Created,
+                        FileDirRef :"",
+                        ItemCount:0,
+                        PublishingContact:"",
+                        PublishingPageContent:"",
+                        PublishingPageImage:newsDetails.PublishingPageImage,
+                        SocialThreadID:""
+                    };
+                    return v;
+                })
+                resolve(articles)
+            })
+        })
+    }
+
 }

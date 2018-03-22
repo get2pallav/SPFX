@@ -4,14 +4,45 @@ import { IIProNewsFeedProps } from './IIProNewsFeedProps';
 import { escape } from '@microsoft/sp-lodash-subset';
 import { TextField } from 'office-ui-fabric-react/lib/textfield';
 import { DefaultButton } from 'office-ui-fabric-react/lib/Button';
-import { ELHelper } from '../../Helpers/helper';
+import { ELHelper, iProHelper } from '../../Helpers/helper';
 import * as $ from 'jquery';
-import iProButton,{IiProButtonProps} from '../../components/iProButton';
+import iProButton, { IiProButtonProps } from '../../components/Button/iProButton';
+import iProSearchBox, { IiProSearchBoxProps } from '../../components/searchBox/iProSearchBox';
+import styleLayout from '../../components/style/iProLayout.module.scss';
+import styleButton from '../../components/style/iProButton.module.scss';
+import listNews, { IlistNewsProps } from '../../components/List/list';
+import { INewsArticle } from '../../../../lib/webparts/Helpers/helper';
+import WebPartContext from '@microsoft/sp-webpart-base/lib/core/WebPartContext';
+export interface IiProNewsFeedState {
+  showEmptyDiv: boolean,
+  loadDiv: boolean
+}
 
-export default class IProNewsFeed extends React.Component<IIProNewsFeedProps, {}> {
+export default class IProNewsFeed extends React.Component<IIProNewsFeedProps, IiProNewsFeedState> {
+  constructor(prop: IIProNewsFeedProps) {
+    super(prop);
+    this.state = ({
+      showEmptyDiv: true,
+      loadDiv: false
+    });
+  }
+
+  componentDidMount() {
+    iProHelper.getPageCount(this.props.context.pageContext.web.serverRelativeUrl).then((count:number) => {
+      let showEmptyDiv: boolean = false;
+      if (count == 0)
+        showEmptyDiv = true;
+
+      this.setState({
+        showEmptyDiv: showEmptyDiv,
+        loadDiv: true
+      })
+    })
+  }
+
   public render(): React.ReactElement<IIProNewsFeedProps> {
-    let v:IiProButtonProps = {
-      text:"And New"
+    let v: IiProButtonProps = {
+      text: "And New"
     }
 
     return (
@@ -21,46 +52,48 @@ export default class IProNewsFeed extends React.Component<IIProNewsFeedProps, {}
         <DefaultButton id="btnCreatePage" onClick={this.onCreatePageClick.bind(this)} text="Create Page" />
         <br />
         <label id="lblStatus" />
-       
-        { 
-          React.createElement(iProButton,{
-          text:"Add Article"
-        })}
+        <div className={[styleLayout.vr, styleLayout.vr_x5, styleLayout.vr_x6S, styleLayout.vr_x10M].join(' ')}>
+          {
+            React.createElement(iProSearchBox, {
+              placeholder: "Search News...",
+              text: "Search"
+            })
+          }
 
-        {/* <div className="vr vr_x5 vr_x6S vr_x10M">
-          <div className="grid mix-grid_middle mix-grid_split">
-            <div className="grid-col grid-col_12of12 grid-col_6of12S grid-col_8of12L">
-              <div>
-                <div className="vr vr_x3 vr_x0S">
-                  <div className="textInputSearch">
-                    <h4 className="u-isVisuallyHidden">Search Box</h4>
-                    <div className="textInputSearch-btn mix-textInputSearch-btn_inactive">
-                      <span className="textInputSearch-btn-icon">
-                        <span className="icon icon_search">
-
-                        </span>
-                      </span>
-                    </div>
-                    <label className="u-isVisuallyHidden">Search</label>
-                    <input type="text" className="textInputSearch-input"  name="kwSearchInput" placeholder="Search News..."  />
-                    </div>
-                </div>
-              </div>
-            </div>
-            <div className="grid-col grid-col_12of12 grid-col_3of12S mix-grid-col_textOpp">
-              <h4 className="u-isVisuallyHidden">Actions</h4>
-              <a className="btn btn_inverse mix-btn_fill" href="/Pages/NewArticle.aspx">
-                New Article
-	            		<span className="btn-iconAlt">
-                  <span className="icon icon_add mix-icon_brand">
-                  </span>
-                </span>
-              </a>
-            </div>
-          </div>
-        </div> */}
+          {this.state.loadDiv ? (this.state.showEmptyDiv ? this.loadEmptyDiv() : this.loadNews()) : null}
+        </div>
       </div>
     );
+  }
+
+  private loadEmptyDiv() {
+    return (
+      <div className={[styleLayout["grid-col"], styleLayout["grid-grid-col_12of12"]].join(' ')}>
+        <div className={[styleLayout.align_center].join(' ')}>
+          <div className="docBlock-inner_blank u-isVisibleL">
+            <div className={[styleLayout.vr, styleLayout.vr_x5].join(' ')}>It doesn't look like there's any news at this site.<br />Create some news to bring this site to life! </div>
+            {
+              React.createElement(iProButton, {
+                text: "Add Article"
+              })
+            }
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  private loadNews() {
+    iProHelper.getNewsArticles(this.props.context.pageContext.web.serverRelativeUrl).then((articles:INewsArticle[])=>{
+      console.log(articles);
+    })
+    return (
+      React.createElement(listNews, {
+        title: "News",
+        date: "10-10-10",
+        preview: "News item"
+      })
+    )
   }
 
   private onCreatePageClick(e) {

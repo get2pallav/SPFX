@@ -21,7 +21,8 @@ export default class IProNewsFeedWebPart extends BaseClientSideWebPart<IIProNews
     const element: React.ReactElement<IIProNewsFeedProps > = React.createElement(
       IProNewsFeed,
       {
-        description: this.properties.description
+        description: this.properties.description,
+        context:this.context
       }
     );
 
