@@ -1,0 +1,326 @@
+  
+// Internal Variables
+
+$brand-blue: #18bae2;
+$brand-green: #19c4ac;
+
+$brand-red: #dc2b67;
+$brand-orange: #da5c14;
+$brand-yellow: #eca227;
+
+$brand-darkest-grey: #343537;
+$brand-dark-grey: #55585D;
+$brand-grey: #7C8087;
+$brand-light-grey: #b4b8be;
+$brand-lighter-grey: #e0e0e0;
+$brand-lightest-grey: #f9f9f9;
+
+$brand-aqua-haze: #fcfdfd;
+$brand-black-haze: #f3f4f4;
+$brand-porcelain: #e8ebec;
+$brand-athens: #dee0e3;
+$brand-iron: #cdd0d4;
+$brand-chateau: #999ea5;
+
+
+
+
+// Global Variables
+
+$brand-primary: $brand-blue;
+$brand-secondary: $brand-green;
+$brand-tertiary: $brand-red;
+$brand-quaternary: $brand-orange;
+$brand-quinary: $brand-yellow;
+
+
+$text-color: $brand-darkest-grey;
+$text-secondary-color: $brand-grey;
+$input-text-color: $brand-iron;
+
+
+// Breakpoints
+
+$viewport-sm: "screen and (max-width: 48rem)";
+$viewport-med: "screen and (min-width: 48rem) and (max-width: 68rem)";
+$viewport-lg: "screen and (min-width: 68rem)";
+
+$viewports-sm-med: "screen and (max-width: 68rem)";
+$viewports-med-lg: "screen and (min-width: 48rem)";
+
+$viewport-xl: "screen and (min-width: 75rem)";
+$viewport-xxl: "screen and (min-width: 90rem)";
+
+.icon{
+    position:relative;
+    display:block;
+    width:100%;
+  }
+  .icon::before{
+    content:"";
+    display:block;
+    width:100%;
+    padding-bottom:100%;
+  }
+  .icon_arrowDown::before{
+    padding-bottom:62.61603%;
+  }
+  .icon_arrowDownAlt::before{
+    padding-bottom:63.22993%;
+  }
+  .icon_arrowRight::before{
+    padding-bottom:65.32847%;
+  }
+  .icon_chevronLeft::before{
+    padding-bottom:159.56873%;
+  }
+  .icon_chevronRight::before{
+    padding-bottom:159.56873%;
+  }
+  .icon_book::before{
+    padding-bottom:88%;
+  }
+  .icon_comment::before{
+    padding-bottom:87.5%;
+  }
+  .icon_external::before{
+    padding-bottom:102.2%;
+  }
+  .icon_flag::before{
+    padding-bottom:130.47445%;
+  }
+  .icon_flagAlt::before{
+    padding-bottom:158.34862%;
+  }
+  .icon_like::before{
+    padding-bottom:87.7%;
+  }
+  .icon_lock::before{
+    padding-bottom:116.7%;
+  }
+  .icon_gear::before {
+    padding-bottom:116.7%;
+  }
+  .icon_menu::before{
+    padding-bottom:86.7%;
+  }
+  .icon_question::before{
+    padding-bottom:177.7%;
+  }
+  .icon_search::before{
+    padding-bottom:100.7%;
+  }
+  .icon_shared::before{
+    padding-bottom:109.1%;
+  }
+  .icon_dots::before{
+    padding-bottom:418.41004%;
+  }
+  .icon_weatherAlt::before{
+    padding-bottom:114%;
+  }
+  .icon_rows::before{
+    padding-bottom:60%;
+  }
+  .icon_sort::before,
+  .icon_sortAsc::before,
+  .icon_sortDesc::before{
+    padding-bottom:166.7%;
+  }
+  .icon_linkedin::before{
+    padding-bottom:98.6%;
+  }
+  .icon_facebook::before{
+    padding-bottom:180%;
+  }
+  .icon_twitter::before{
+    padding-bottom:81.3%;
+  }
+  .icon_skype::before{
+    padding-bottom:104.3%;
+  }
+  .icon_clock::before{
+    padding-bottom:116.68611%;
+  }
+  .icon_star::before{
+    padding-bottom:130%;
+  }
+  .icon-doc::before{
+    padding-bottom:132%;
+  }
+  .icon_siteLevel::before{
+    padding-bottom:80%;
+  }
+  .icon > svg{
+    fill:$brand-lighter-grey;
+  }
+  .icon_bell > svg,
+  .icon_megaphone > svg,
+  .icon_flag > svg{
+    fill:#ffffff;
+    stroke:$brand-dark-grey;
+    stroke-width:9.6386;
+    stroke-miterlimit:10;
+    -webkit-transition:all 250ms;
+    transition:all 250ms;
+  }
+  .icon_bell > svg{
+    stroke-width:7;
+  }
+  .icon_megaphone > svg {
+    stroke-width:8;
+    fill: #ffffff;
+  }
+  .icon_flagAlt > svg{
+    fill:$brand-quinary;
+    stroke:#c17f2a;
+    stroke-width:9.6386;
+    stroke-miterlimit:10;
+  }
+  .icon-doc > svg{
+    fill:$brand-chateau;
+  }
+  .icon-doc_overlay{
+    fill:rgba(0, 0, 0, 0.35);
+  }
+  .icon_docJPG > svg,
+  .icon_docJPEG > svg,
+  .icon_docPNG > svg,
+  .icon_docGIF > svg,
+  .icon_docBITMAP > svg{
+    fill:$brand-primary;
+  }
+  .icon_docPDF > svg{
+    fill:#dc2b2b;
+  }
+  .icon_docDOC > svg,
+  .icon_docDOCX > svg{
+    fill:#1891e2;
+  }
+  .icon_docPPT > svg,
+  .icon_docPPTX > svg{
+    fill:#ee672a;
+  }
+  .icon_docXLS > svg,
+  .icon_docXLSX > svg{
+    fill:#2bb764;
+  }
+  .icon_docONE > svg{
+    fill:#75529a;
+  }
+  .icon_docPSD > svg{
+    fill:#27d5fa;
+  }
+  .icon_docAI > svg,
+  .icon_docEPS > svg,
+  .icon_docSVG > svg{
+    fill:#f37021;
+  }
+  .icon_docINDD > svg{
+    fill:#ee3990;
+  }
+  .icon_docSKETCH > svg{
+    fill:#f7b500;
+  }
+  .icon_dots > svg{
+    fill:$brand-chateau;
+  }
+  .icon_lock > svg,
+  .icon_sort > svg,
+  .icon_sortAsc > svg,
+  .icon_sortDesc > svg,
+  .icon_gear > svg{
+    fill:$brand-light-grey;
+  }
+  .icon_linkedin > svg,
+  .icon_facebook > svg,
+  .icon_twitter > svg,
+  .icon_skype > svg{
+    fill:#ffffff;
+  }
+  .icon_checkAlt > svg{
+    fill:$brand-secondary;
+  }
+  .icon_circleX > svg{
+    fill:$brand-tertiary;
+  }
+  .icon_user > svg{
+    fill-rule:evenodd;
+    clip-rule:evenodd;
+    fill:$brand-iron;
+  }
+  .icon_delete > svg{
+    fill: #dde0e3;
+  }
+  .icon_delete:hover > svg{
+    fill: $brand-tertiary;
+  }
+  .icon_checkedOut > svg{
+    fill: $brand-secondary;
+    background-color:#ffffff;
+  }
+  .icon_siteLevel > svg{
+    fill:$brand-light-grey;
+  }
+  .icon-inner{
+    position:absolute;
+    top:0;
+    left:0;
+    width:100%;
+    height:100%;
+  }
+  .icon-ext{
+    display:block;
+    width:100%;
+    font-family:"Lato";
+    font-size:0.5rem;
+    color:#fff;
+    text-align:center;
+    text-transform:uppercase;
+    position:absolute;
+    bottom:4px;
+    z-index:5;
+  }
+  @media #{$viewports-med-lg}{
+    .icon-ext{
+      font-size:1rem;
+      bottom:8px;
+    }
+    .linkDoc-icon .icon-ext {
+      font-size:0.46rem;
+    }
+  }
+  .mix-icon-ext_docBlock{
+    font-size:0.5rem;
+    bottom:4px;
+  }
+  .mix-icon-ext_search{
+    font-size:0.7rem;
+    bottom:5px;
+  }
+  .icon-weatherAlt-cloud{
+    stroke:#ffffff;
+  }
+  .icon-weatherAlt-drops{
+    fill:#7eadd9;
+  }
+  .mix-icon_reverse > svg,
+  .mix-icon-detail_reverse{
+    fill:#ffffff;
+  }
+  .mix-icon_brand > svg{
+    fill:$brand-primary;
+  }
+  .mix-icon_text > svg{
+    fill:$brand-darkest-grey;
+  }
+  .mix-icon_uiMedium > svg{
+    fill:$brand-light-grey;
+  }
+  .mix-icon_uiDark > svg{
+    fill:rgba(0, 0, 0, 0.3);
+  }
+  .mix-icon-detail_positive,
+  .mix-icon-detail_positive svg{
+    fill:$brand-secondary;
+  }

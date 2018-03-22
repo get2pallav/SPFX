@@ -1,0 +1,220 @@
+  
+// Internal Variables
+
+$brand-blue: #18bae2;
+$brand-green: #19c4ac;
+
+$brand-red: #dc2b67;
+$brand-orange: #da5c14;
+$brand-yellow: #eca227;
+
+$brand-darkest-grey: #343537;
+$brand-dark-grey: #55585D;
+$brand-grey: #7C8087;
+$brand-light-grey: #b4b8be;
+$brand-lighter-grey: #e0e0e0;
+$brand-lightest-grey: #f9f9f9;
+
+$brand-aqua-haze: #fcfdfd;
+$brand-black-haze: #f3f4f4;
+$brand-porcelain: #e8ebec;
+$brand-athens: #dee0e3;
+$brand-iron: #cdd0d4;
+$brand-chateau: #999ea5;
+
+
+
+
+// Global Variables
+
+$brand-primary: $brand-blue;
+$brand-secondary: $brand-green;
+$brand-tertiary: $brand-red;
+$brand-quaternary: $brand-orange;
+$brand-quinary: $brand-yellow;
+
+
+$text-color: $brand-darkest-grey;
+$text-secondary-color: $brand-grey;
+$input-text-color: $brand-iron;
+
+
+// Breakpoints
+
+$viewport-sm: "screen and (max-width: 48rem)";
+$viewport-med: "screen and (min-width: 48rem) and (max-width: 68rem)";
+$viewport-lg: "screen and (min-width: 68rem)";
+
+$viewports-sm-med: "screen and (max-width: 68rem)";
+$viewports-med-lg: "screen and (min-width: 48rem)";
+
+$viewport-xl: "screen and (min-width: 75rem)";
+$viewport-xxl: "screen and (min-width: 90rem)";
+
+
+.iconLabel{
+    display:inline-block;
+    vertical-align:middle;
+    color: $text-secondary-color;
+    -webkit-transition:all 250ms;
+    transition:all 250ms;
+  }
+  .iconLabel:visited{
+    color: $text-secondary-color;
+  }
+  .iconLabel + .iconLabel{
+    margin-left:30px;
+  }
+  .iconLabel > *{
+    display:inline-block;
+    vertical-align:middle;
+  }
+  /* Community - Smaller Icons */
+  .feedSocial_counts .iconLabel-icon {
+    width:14px;
+    margin-right:4px;
+  }
+  .feedSocial_counts * {
+    font-size:14px;
+    font-size:0.875rem;
+  }
+  .feedSocial_delete {
+    cursor:pointer;
+  }
+  .feedSocial_counts button {
+    margin-right:10px;
+  }
+  .split-left.feedSocial_counts {
+    padding-left:34px;
+  }
+  .iconLabel-icon{
+    display:inline-block;
+    width:25px;
+    margin-right:7px;
+  }
+  .iconLabel-icon svg{
+    fill:$brand-light-grey;
+    -webkit-transition:all 250ms;
+    transition:all 250ms;
+  }
+  .iconLabel-label{
+    display:inline-block;
+    font-family:'Lato', sans-serif;
+    font-weight:normal;
+  }
+  .iconLabel:hover/*,
+  .iconLabel:focus*/{
+    color:$brand-primary;
+    background-color:transparent;
+  }
+  .iconLabel:hover svg,
+  /*.iconLabel:focus svg,*/
+  button.isLiked .iconLabel-icon svg{
+    fill:$brand-primary;
+  }
+  .iconLabel_isActive{
+    color:$brand-primary;
+  }
+  .iconLabel_isActive svg{
+    fill:$brand-primary;
+  }
+  /*.iconLabel_isActive:focus,*/
+  .iconLabel_isActive:hover{
+    color: $text-color;
+  }
+  /*.iconLabel_isActive:focus svg,*/
+  .iconLabel_isActive:hover svg{
+    fill:$brand-darkest-grey;
+  }
+  .iconLabel_isActiveAlt{
+    color:$brand-quinary;
+  }
+  .iconLabel_isActiveAlt svg{
+    fill:$brand-quinary;
+    stroke:#c27e0d;
+  }
+  /*.iconLabel_isActiveAlt:focus,*/
+  .iconLabel_isActiveAlt:hover{
+    color: $text-color;
+  }
+  /*.iconLabel_isActiveAlt:focus svg,*/
+  .iconLabel_isActiveAlt:hover svg{
+    fill:$brand-darkest-grey;
+    stroke:#000000;
+  }
+  /*.mix-iconLabel_inactive:focus,*/
+  .mix-iconLabel_inactive:hover{
+    color: $text-secondary-color;
+  }
+  /*.mix-iconLabel_inactive:focus svg,*/
+  .mix-iconLabel_inactive:hover svg{
+    fill:$brand-light-grey;
+  }
+  .mix-iconLabel_reverse{
+    color:#ffffff;
+  }
+  .mix-iconLabel_reverse svg{
+    fill:#ffffff;
+  }
+  /*.mix-iconLabel_reverse_inactive:focus,*/
+  .mix-iconLabel_reverse_inactive:hover{
+    color:#ffffff;
+  }
+  /*.mix-iconLabel_reverse_inactive:focus svg,*/
+  .mix-iconLabel_reverse_inactive:hover svg{
+    fill:#ffffff;
+  }
+  .mix-iconLabel_right{
+    margin-right:0;
+    margin-left:7px;
+  }
+  .mix-iconLabel-icon_small{
+    width:20px;
+    margin-left:9px
+  }
+  @media #{$viewports-med-lg}{
+    .mix-iconLabel-icon_small{
+      margin-left:0;
+    }
+  }
+  .mix-iconLabel-icon_xSmall{
+    width:12px;
+    margin-right:2px;
+  }
+  .mix-iconLabel-label_xSmall{
+    font-size:14px;
+    font-size:0.875rem;
+    line-height:1.21429;
+  }
+  .mix-iconLabel-icon_noStroke svg{
+    stroke:none !important;
+  }
+  .mix-iconLabel_sortMenu{
+    text-transform:uppercase;
+    text-align:center;
+    font-size:12px;
+    font-size:0.75rem;
+    line-height:1.25
+  }
+  .mix-iconLabel_sortMenu:visited{
+    color: $text-secondary-color;
+  }
+  .mix-iconLabel_sortMenu:hover{
+    color:$brand-primary;
+  }
+  .mix-iconLabel_sortMenu + .mix-iconLabel_sortMenu{
+    margin:0;
+  }
+  .mix-iconLabel_sortMenu .iconLabel-icon{
+    margin:0 6px;
+  }
+  .mix-iconLabel_sortMenu svg{
+    stroke:none;
+  }
+  .mix-iconLabel_sortMenu.isActiveTab > .iconLabel-label{
+    color: $text-color;
+  }
+  .mix-iconLabel_sortMenu.isActiveTab .iconLabel-icon svg{
+    fill:$brand-darkest-grey;
+    stroke:none;
+  }

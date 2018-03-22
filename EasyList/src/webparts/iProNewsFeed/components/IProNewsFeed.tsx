@@ -11,11 +11,12 @@ import iProSearchBox, { IiProSearchBoxProps } from '../../components/searchBox/i
 import styleLayout from '../../components/style/iProLayout.module.scss';
 import styleButton from '../../components/style/iProButton.module.scss';
 import listNews, { IlistNewsProps } from '../../components/List/list';
-import { INewsArticle } from '../../../../lib/webparts/Helpers/helper';
+import { INewsArticle } from '../../Helpers/helper';
 import WebPartContext from '@microsoft/sp-webpart-base/lib/core/WebPartContext';
 export interface IiProNewsFeedState {
   showEmptyDiv: boolean,
-  loadDiv: boolean
+  loadDiv: boolean,
+  articles?: INewsArticle[]
 }
 
 export default class IProNewsFeed extends React.Component<IIProNewsFeedProps, IiProNewsFeedState> {
@@ -23,12 +24,13 @@ export default class IProNewsFeed extends React.Component<IIProNewsFeedProps, Ii
     super(prop);
     this.state = ({
       showEmptyDiv: true,
-      loadDiv: false
+      loadDiv: false,
+      articles:[]
     });
   }
 
   componentDidMount() {
-    iProHelper.getPageCount(this.props.context.pageContext.web.serverRelativeUrl).then((count:number) => {
+    iProHelper.getPageCount(this.props.context.pageContext.web.serverRelativeUrl).then((count: number) => {
       let showEmptyDiv: boolean = false;
       if (count == 0)
         showEmptyDiv = true;
@@ -37,7 +39,15 @@ export default class IProNewsFeed extends React.Component<IIProNewsFeedProps, Ii
         showEmptyDiv: showEmptyDiv,
         loadDiv: true
       })
+      return showEmptyDiv;
     })
+      .then((showEmptyDiv: boolean) => {
+        iProHelper.getNewsArticles(this.props.context.pageContext.web.serverRelativeUrl).then((newsArticles: INewsArticle[]) => {
+          this.setState({
+            articles: newsArticles
+          })
+        })
+      })
   }
 
   public render(): React.ReactElement<IIProNewsFeedProps> {
@@ -84,15 +94,23 @@ export default class IProNewsFeed extends React.Component<IIProNewsFeedProps, Ii
   }
 
   private loadNews() {
-    iProHelper.getNewsArticles(this.props.context.pageContext.web.serverRelativeUrl).then((articles:INewsArticle[])=>{
-      console.log(articles);
-    })
+    let elem = this.state.articles && this.state.articles.length > 0 ? this.state.articles.map((article)=>{
+      return React.createElement(listNews,{
+        title:article.Title,
+        date:article.ArticleStartDate,
+        preview:article.PreviewText
+      }) 
+    }) : null ;
+    // iProHelper.getNewsArticles(this.props.context.pageContext.web.serverRelativeUrl).then((articles: INewsArticle[]) => {
+    //   console.log(articles);
+    // })
     return (
-      React.createElement(listNews, {
-        title: "News",
-        date: "10-10-10",
-        preview: "News item"
-      })
+      // React.createElement(listNews, {
+      //   title: "News",
+      //   date: "10-10-10",
+      //   preview: "News item"
+      // })
+      {elem}
     )
   }
 

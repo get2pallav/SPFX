@@ -92,7 +92,7 @@ export class ELHelper {
             sp.web.addClientSidePage(pageTitle + ".aspx", pageName).then((result: ClientSidePage) => {
 
                 sp.web.getClientSideWebParts().then((cwps: ClientSidePageComponent[]) => {
-                    let cw: ClientSidePageComponent = cwps.filter((wp) => { if (wp.ComponentType == 1 && wp.Name == "EasyList") return wp; })[0];
+                    let cw: ClientSidePageComponent = cwps.filter((wp) => { if (wp.ComponentType == 1 && wp.Name == "Banner") return wp; })[0];
                     console.log(cw);
                     let jsonWp: any = JSON.parse(cw.Manifest);
                     let wp: ClientSideWebpart = new ClientSideWebpart(jsonWp.alias);
@@ -157,27 +157,29 @@ export class iProHelper {
     static getPageCount(webRealativePath:string):Promise<number>{
         return new Promise<number>((resolve,reject)=>{
             sp.web.getFolderByServerRelativePath(webRealativePath + "/pages/news").select("ItemCount").get().then((count)=>{
-                console.log(count.ItemCount);
+                console.log(count.ItemCount);debugger;
                 resolve(count.ItemCount);
             })
         })
     }
-    static getNewsArticles(webRealativePath: string): Promise<INewsArticle[]> {
+    static getNewsArticles(webRealativePath: string): Promise<INewsArticle[]> {debugger;
         return new Promise<INewsArticle[]>((resolve, reject) => {
             sp.web.getFolderByServerRelativeUrl(webRealativePath + "/pages/news").files.top(4).select(
                 "ListItemAllFields/Title",
                 "ListItemAllFields/PreviewText",
-                "PublishingRollupImage",
-                "PublishingPageImage",
+                "ListItemAllFields/PublishingRollupImage",
+                "ListItemAllFields/PublishingPageImage",
                 "ListItemAllFields/ArticleStartDate",
                 "ListItemAllFields/LikesCount",
-                "ListItemAllFields/LikedBy",
+                "ListItemAllFields/LikedByStringId",
                 "ListItemAllFields/FileRef",
                 "Author",
                 "Created"
             ).expand("ListItemAllFields").get().then((news) => {
                 console.log(news);
+
                 let articles: INewsArticle[] = news.map((news) => {
+
                     let newsDetails = news.ListItemAllFields;
                     let v: INewsArticle = {
                         Title:newsDetails.Title,
