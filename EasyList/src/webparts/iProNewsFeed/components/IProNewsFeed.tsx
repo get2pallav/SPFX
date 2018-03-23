@@ -25,7 +25,7 @@ export default class IProNewsFeed extends React.Component<IIProNewsFeedProps, Ii
     this.state = ({
       showEmptyDiv: true,
       loadDiv: false,
-      articles:[]
+      articles: []
     });
   }
 
@@ -94,23 +94,14 @@ export default class IProNewsFeed extends React.Component<IIProNewsFeedProps, Ii
   }
 
   private loadNews() {
-    let elem = this.state.articles && this.state.articles.length > 0 ? this.state.articles.map((article)=>{
-      return React.createElement(listNews,{
-        title:article.Title,
-        date:article.ArticleStartDate,
-        preview:article.PreviewText
-      }) 
-    }) : null ;
-    // iProHelper.getNewsArticles(this.props.context.pageContext.web.serverRelativeUrl).then((articles: INewsArticle[]) => {
-    //   console.log(articles);
-    // })
     return (
-      // React.createElement(listNews, {
-      //   title: "News",
-      //   date: "10-10-10",
-      //   preview: "News item"
-      // })
-      {elem}
+      this.state.articles.map((article) => {
+        return React.createElement(listNews, {
+          title: article.Title,
+          date: article.ArticleStartDate,
+          preview: article.PreviewText
+        })
+      })
     )
   }
 

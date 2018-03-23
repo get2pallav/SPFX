@@ -157,7 +157,6 @@ export class iProHelper {
     static getPageCount(webRealativePath:string):Promise<number>{
         return new Promise<number>((resolve,reject)=>{
             sp.web.getFolderByServerRelativePath(webRealativePath + "/pages/news").select("ItemCount").get().then((count)=>{
-                console.log(count.ItemCount);debugger;
                 resolve(count.ItemCount);
             })
         })
@@ -176,7 +175,6 @@ export class iProHelper {
                 "Author",
                 "Created"
             ).expand("ListItemAllFields").get().then((news) => {
-                console.log(news);
 
                 let articles: INewsArticle[] = news.map((news) => {
 
