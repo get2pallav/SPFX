@@ -5,76 +5,88 @@ import styleLayout from '../../components/style/iProLayout.module.scss';
 import styleIcon from '../style/icon.module.scss';
 import styleIconLabel from '../style/iconLabel.module.scss';
 import styleDropdown from '../style/dropdown.module.scss';
-
-export interface IlistNewsProps{
- title:string,
- date:string,
- preview:string,
- webTitle?:string,
- webType?:string,
- breadcrumbClassType?:string
+import styleImage from '../style/images.module.scss';
+import iProIcons, { IIconProps } from '../icons/icons';
+import styleUtil from '../style/utility.module.scss';
+export enum breadcrumbClassType {
+  orange,
+  red
 }
 
-export default class listNews extends React.Component<IlistNewsProps,{}>{
-    render(): React.ReactElement<IlistNewsProps>{
-        return (
-            <div>
-            <div className={styleHeadling.headlineBlock}>
-              {/* {{ if PublishingPageImage }} */}
-              <div className={styleHeadling["headlineBlock-img"]}>
-                {/* <div className="imgFillBG" style="background-image: url('{{:~SPThumbNail.pictureFileReftoLargeThumbnailUrl(~Image.getImgSrc(PublishingPageImage))}}')"></div> */}
-              </div>
-              {/* {{/if}} */}
-              <div className={[styleLayout.vr, styleLayout.vr_x5, styleLayout.vr_x4S, styleLayout.vr_x5M].join(' ')}>
-                <div className={styleHeadling["headlineBlock-text"]}>
-                  <div className={[styleBreadcrumbs.breadcrumbsDetail, styleBreadcrumbs["mix-breadcrumbsDetail_alt"]].join(' ')}>
-                    <span className={styleBreadcrumbs["breadcrumbsDetail-circle"]}></span>
-                    <span className={styleBreadcrumbs["breadcrumbsDetail-main"]}>Community(to change)</span>
-                    <span className={styleBreadcrumbs["breadcrumbsDetail-icon"]}>
-                      <span className={[styleIcon.icon,styleIcon.icon_arrowRight].join(' ')}>
-                        <svg className={styleIcon["icon-inner"]}>
-                        </svg>
+export interface IlistNewsProps {
+  title: string,
+  date: string,
+  preview: string,
+  webTitle: string,
+  webType: string,
+  breadcrumbClassType: breadcrumbClassType,
+  publishingImage: string,
+  FileRef: string,
+  likeCount: number
+}
+
+export default class listNews extends React.Component<IlistNewsProps, {}>{
+  render(): React.ReactElement<IlistNewsProps> {
+    return (
+      <div className={styleHeadling.headlineBlock}>
+        {/* {{ if PublishingPageImage }} */}
+        <div className={styleHeadling["headlineBlock-img"]}>
+          <div className={styleImage["imgFillBG"]} style={{ backgroundImage: "url('" + this.pictureFileReftoLargeThumbnailUrl(this.props.publishingImage) + "')" }} ></div>
+        </div>
+        {/* {{/if}} */}
+        <div className={[styleLayout.vr, styleLayout.vr_x5, styleLayout.vr_x4S, styleLayout.vr_x5M].join(' ')}>
+          <div className={styleHeadling["headlineBlock-text"]}>
+            <div className={[styleBreadcrumbs.breadcrumbsDetail, this.props.breadcrumbClassType == breadcrumbClassType.orange ? styleBreadcrumbs["mix-breadcrumbsDetail_alt"] : styleBreadcrumbs["mix-breadcrumbsDetail_alt2"]].join(' ')}>
+              <span className={styleBreadcrumbs["breadcrumbsDetail-circle"]}></span>
+              <span className={styleBreadcrumbs["breadcrumbsDetail-main"]}>{this.props.webType}</span>
+              <span className={styleBreadcrumbs["breadcrumbsDetail-icon"]}>
+                <span className={[styleIcon.icon, styleIcon.icon_arrowRight].join(' ')}>
+                  {iProIcons.icon_arrowRight({
+                    classNames: [styleIcon["icon-inner"]]
+                  })}
+                </span>
+              </span>
+              <span className="breadcrumbsDetail-main">{this.props.webTitle}</span>
+            </div>
+            <div className={styleHeadling["headlineBlock-text-title"]}><a href={this.props.FileRef}>{this.props.title}</a></div>
+            <div className={styleHeadling["headlineBlock-text-detail"]}>{this.props.date}</div>
+            <div className={styleHeadling["headlineBlock-text-main"]}>{this.props.preview}</div>
+          </div>
+        </div>
+        <div className={[styleLayout.vr, styleLayout.vr_x5, styleLayout.vr_x8S, styleLayout.vr_x10M].join(' ')}>
+          <div className={styleHeadling["headlineBlock-icon"]}>
+            <div className={styleLayout.grid}>
+              <div className={[styleLayout["grid-col"], styleLayout["grid-col_6of12"]].join(' ')}>
+                <div className={[styleLayout.listH, styleLayout.listH_x5].join(' ')}>
+                  <div>
+                    <h4 className={styleUtil["u-isVisuallyHidden"]}>Likes</h4>
+                    <button type="button" className={[styleIconLabel.iconLabel, "analyticsTrigger"].join(' ')} style={{ backgroundColor: "transparent", borderWidth: 0 }} name="likeControl">
+                      <span className={styleIconLabel["iconLabel-icon"]}>
+                        <span className={[styleIcon.icon, styleIcon.icon_like].join(' ')}>
+                          {iProIcons.icon_like({
+                            classNames: [styleIcon["icon-inner"]]
+                          })}
+                        </span>
                       </span>
-                    </span>
-                    <span className="breadcrumbsDetail-main">H and W(to change)</span>
+                      <span className={styleIconLabel["iconLabel-label"]}>{this.props.likeCount ? this.props.likeCount : 0 }</span>
+                    </button>
                   </div>
-                  <h5 className={styleHeadling["headlineBlock-text-title"]}><a href="{{:FileRef}}">{this.props.title}</a></h5> 
-                  <div className={styleHeadling["headlineBlock-text-detail"]}>{this.props.date}</div>
-                  <div className={styleHeadling["headlineBlock-text-main"]}>{this.props.preview}</div>
+                  <div>
+                    <h4 className={styleUtil["u-isVisuallyHidden"]}>Comments</h4>
+                    <div className={[styleIconLabel.iconLabel, styleIconLabel["mix-iconLabel_inactive"]].join(' ')}>
+                      <span className={styleIconLabel["iconLabel-icon"]}>
+                        <span className={[styleIcon.icon, styleIcon.icon_comment].join(' ')}>
+                          {iProIcons.icon_comment({
+                            classNames: [styleIcon["icon-inner"]]
+                          })}
+                        </span>
+                      </span>
+                      {/* <span name='SocialPostCount' SocialThreadID="{{:SocialThreadID}}" SocialMarker="SocialThreadRecord_{{:ID}}" dcnIndex="0" itemId="{{:ID}}" itemIndex="{{:#getIndex()}}"></span> */}
+                    </div>
+                  </div>
                 </div>
               </div>
-              <div className={[styleLayout.vr, styleLayout.vr_x5, styleLayout.vr_x8S, styleLayout.vr_x10M].join(' ')}>
-                <div className={styleHeadling["headlineBlock-icon"]}>
-                  <div className={styleLayout.grid}>
-                    <div className={[styleLayout["grid-col"], styleLayout["grid-col_6of12"]].join(' ')}>
-                      <div className={[styleLayout.listH, styleLayout.listH_x5].join(' ')}>
-                        <div>
-                          <h4 className="u-isVisuallyHidden">Likes</h4>
-                          <button type="button" className={[styleIconLabel.iconLabel, "analyticsTrigger"].join(' ')} name="likeControl">
-                            <span className={styleIconLabel["iconLabel-icon"]}>
-                              <span className={[styleIcon.icon, styleIcon.icon_like].join(' ')}>
-                                <svg className={styleIcon["icon-inner"]}>
-                                </svg>
-                              </span>
-                            </span>
-                            <span className={styleIconLabel["iconLabel-label"]}>(%d)</span>
-                          </button>
-                        </div>
-                        <div>
-                          <h4 className="u-isVisuallyHidden">Comments</h4>
-                          <div className={[styleIconLabel.iconLabel, styleIconLabel["mix-iconLabel_inactive"]].join(' ')}>
-                            <span className={styleIconLabel["iconLabel-icon"]}>
-                              <span className={[styleIcon.icon, styleIcon.icon_comment].join(' ')}>
-                                <svg className={styleIcon["icon-inner"]}>
-                                </svg>
-                              </span>
-                            </span>
-                            {/* <span name='SocialPostCount' SocialThreadID="{{:SocialThreadID}}" SocialMarker="SocialThreadRecord_{{:ID}}" dcnIndex="0" itemId="{{:ID}}" itemIndex="{{:#getIndex()}}"></span> */}
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                    {/* <div className={[styleLayout["grid-col"], styleLayout["grid-col_6of12"], styleLayout["mix-grid-col_textOpp"]].join(' ')}>
+              {/* <div className={[styleLayout["grid-col"], styleLayout["grid-col_6of12"], styleLayout["mix-grid-col_textOpp"]].join(' ')}>
                       <div className={[styleLayout.listH, styleLayout.listH_x5].join(' ')}>
                         <div className="cui-menuDropdown">
                           <div className="dropdownMenuContainer mix-dropdownMenuContainer_pos3">
@@ -129,11 +141,25 @@ export default class listNews extends React.Component<IlistNewsProps,{}>{
                         </div>
                       </div>
                     </div> */}
-                  </div>
-                </div>
-              </div>
             </div>
           </div>
-        )
-    }
+        </div>
+      </div>
+    )
+  }
+
+  pictureFileReftoLargeThumbnailUrl(URL: string) {
+    try {
+      if (URL && URL.length > 0) {
+        var fileName = URL.split('/').pop();
+        var n = URL.lastIndexOf(fileName);
+        fileName = (fileName.replace(/.([^.]*)$/, '_$1') + ".jpg");
+        if (n >= 0 && n + fileName.length >= URL.length) {
+          URL = URL.substring(0, n) + "_w/" + fileName;
+        }
+      }
+    } catch (e) { }
+    return URL;
+
+  }
 }

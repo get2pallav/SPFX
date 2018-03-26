@@ -1,0 +1,225 @@
+
+// Internal Variables
+
+$brand-blue: #18bae2;
+$brand-green: #19c4ac;
+
+$brand-red: #dc2b67;
+$brand-orange: #da5c14;
+$brand-yellow: #eca227;
+
+$brand-darkest-grey: #343537;
+$brand-dark-grey: #55585D;
+$brand-grey: #7C8087;
+$brand-light-grey: #b4b8be;
+$brand-lighter-grey: #e0e0e0;
+$brand-lightest-grey: #f9f9f9;
+
+$brand-aqua-haze: #fcfdfd;
+$brand-black-haze: #f3f4f4;
+$brand-porcelain: #e8ebec;
+$brand-athens: #dee0e3;
+$brand-iron: #cdd0d4;
+$brand-chateau: #999ea5;
+
+
+
+
+// Global Variables
+
+$brand-primary: $brand-blue;
+$brand-secondary: $brand-green;
+$brand-tertiary: $brand-red;
+$brand-quaternary: $brand-orange;
+$brand-quinary: $brand-yellow;
+
+
+$text-color: $brand-darkest-grey;
+$text-secondary-color: $brand-grey;
+$input-text-color: $brand-iron;
+
+
+// Breakpoints
+
+$viewport-sm: "screen and (max-width: 48rem)";
+$viewport-med: "screen and (min-width: 48rem) and (max-width: 68rem)";
+$viewport-lg: "screen and (min-width: 68rem)";
+
+$viewports-sm-med: "screen and (max-width: 68rem)";
+$viewports-med-lg: "screen and (min-width: 48rem)";
+
+$viewport-xl: "screen and (min-width: 75rem)";
+$viewport-xxl: "screen and (min-width: 90rem)";
+
+.u-isHidden{
+    display:none !important;
+  }
+  .u-isHiddenS{
+    display:block !important
+  }
+  @media #{$viewports-med-lg}{
+    .u-isHiddenS{
+      display:none !important;
+    }
+  }
+  .u-isHiddenM{
+    display:block !important
+  }
+  @media #{$viewport-lg}{
+    .u-isHiddenM{
+      display:none !important;
+    }
+  }
+  .u-isHiddenL{
+  }
+  @media #{$viewport-xl}{
+    .u-isHiddenL{
+      display:none !important;
+    }
+  }
+  .u-isHiddenAlt{
+    visibility:hidden;
+  }
+  .u-isHiddenM_inline{
+    display:inline-block !important
+  }
+  @media #{$viewport-lg}{
+    .u-isHiddenM_inline{
+      display:none !important;
+    }
+  }
+
+  
+  .u-isVisuallyHidden{
+    width:1px;
+    height:1px;
+    padding:0;
+    margin:-1px;
+    border:0;
+    position:absolute;
+    clip:rect(0 0 0 0);
+    overflow:hidden;
+  }
+  .u-isVisibleS{
+    display:none !important
+  }
+  @media #{$viewports-med-lg}{
+    .u-isVisibleS{
+      display:block !important;
+    }
+  }
+  .u-isVisibleSInline{
+    display:none !important
+  }
+  @media #{$viewports-med-lg}{
+    .u-isVisibleSInline{
+      display:inline-block !important;
+    }
+  }
+  .u-isVisibleM{
+    display:none !important
+  }
+  @media #{$viewport-lg}{
+    .u-isVisibleM{
+      display:block !important;
+    }
+  }
+  .u-isVisibleSMOnly{
+    display:none !important
+  }
+  @media #{$viewports-med-lg}{
+    .u-isVisibleSMOnly{
+      display:block !important;
+    }
+  }
+  @media #{$viewport-xl}{
+    .u-isVisibleSMOnly{
+      display:none !important;
+    }
+  }
+  .u-isVisibleSMOnlyInline{
+    display:none !important
+  }
+  @media #{$viewports-med-lg}{
+    .u-isVisibleSMOnlyInline{
+      display:inline-block !important;
+    }
+  }
+  @media #{$viewport-xl}{
+    .u-isVisibleSMOnlyInline{
+      display:none !important;
+    }
+  }
+  .u-isVisibleL{
+    display:none !important
+  }
+  @media #{$viewport-xl}{
+    .u-isVisibleL{
+      display:block !important;
+    }
+  }
+  .u-isVisibleLInline{
+    display:none !important
+  }
+  @media #{$viewport-xl}{
+    .u-isVisibleLInline{
+      display:inline-block !important;
+    }
+  }
+  .u-isVisibleXL{
+    display:none !important
+  }
+  @media #{$viewport-xxl}{
+    .u-isVisibleXL{
+      display:block !important;
+    }
+  }
+  .u-isVisibleS_inline{
+    display:none !important
+  }
+  @media #{$viewports-med-lg}{
+    .u-isVisibleS_inline{
+      display:inline-block !important;
+    }
+  }
+  .u-isVisibleM_inline,
+  .u-isVisibleMInline{
+    display:none !important
+  }
+  @media #{$viewport-lg}{
+    .u-isVisibleM_inline,
+    .u-isVisibleMInline{
+      display:inline-block !important;
+    }
+  }
+  .u-isVisibleM_flex{
+    display:none !important
+  }
+  @media #{$viewport-lg}{
+    .u-isVisibleM_flex{
+      display:inline-block !important;
+      display:-webkit-box !important;
+      display:-ms-flexbox !important;
+      display:flex !important;
+    }
+  }
+  .u-clearFloat{
+    clear:both;
+  }
+  .u-clearFloatS{
+  }
+  .u-FloatL {
+    float:left;
+  }
+  .u-FloatR {
+    float:right;
+  }
+  @media #{$viewports-med-lg}{
+    .u-clearFloatS{
+      clear:both;
+    }
+  }
+  .u-customScroll{
+    position:relative;
+    overflow:auto;
+  }

@@ -144,63 +144,129 @@ export interface INewsArticle {
     PublishingPageImage: string,
     PublishingPageContent: string,
     ArticleStartDate: string,
-    LikesCount: string,
-    LikedBy: string,
+    LikesCount: number,
+    LikedByStringId: string[],
     FileRef: string,
     FileDirRef: string,
     SocialThreadID: string,
     Author: string,
     Created: string,
-    ItemCount: number
+    ID: number
 }
+
 export class iProHelper {
-    static getPageCount(webRealativePath:string):Promise<number>{
-        return new Promise<number>((resolve,reject)=>{
-            sp.web.getFolderByServerRelativePath(webRealativePath + "/pages/news").select("ItemCount").get().then((count)=>{
-                resolve(count.ItemCount);
-            })
-        })
-    }
-    static getNewsArticles(webRealativePath: string): Promise<INewsArticle[]> {debugger;
-        return new Promise<INewsArticle[]>((resolve, reject) => {
-            sp.web.getFolderByServerRelativeUrl(webRealativePath + "/pages/news").files.top(4).select(
-                "ListItemAllFields/Title",
-                "ListItemAllFields/PreviewText",
-                "ListItemAllFields/PublishingRollupImage",
-                "ListItemAllFields/PublishingPageImage",
-                "ListItemAllFields/ArticleStartDate",
-                "ListItemAllFields/LikesCount",
-                "ListItemAllFields/LikedByStringId",
-                "ListItemAllFields/FileRef",
-                "Author",
-                "Created"
-            ).expand("ListItemAllFields").get().then((news) => {
-
-                let articles: INewsArticle[] = news.map((news) => {
-
-                    let newsDetails = news.ListItemAllFields;
-                    let v: INewsArticle = {
-                        Title:newsDetails.Title,
-                        PreviewText: newsDetails.PreviewText,
-                        PublishingRollupImage: newsDetails.PublishingRollupImage,
-                        ArticleStartDate: newsDetails.ArticleStartDate,
-                        LikesCount: newsDetails.LikesCount,
-                        LikedBy:newsDetails.LikedBy,
-                        FileRef : newsDetails.FileRef,
-                        Author: newsDetails.Author,
-                        Created: newsDetails.Created,
-                        FileDirRef :"",
-                        ItemCount:0,
-                        PublishingContact:"",
-                        PublishingPageContent:"",
-                        PublishingPageImage:newsDetails.PublishingPageImage,
-                        SocialThreadID:""
-                    };
-                    return v;
+    static getPageCount(webRealativePath: string): Promise<number[]> {
+        return new Promise<number[]>((resolve, reject) => {
+            sp.web.getFolderByServerRelativePath(webRealativePath + "/pages/news").files
+                .select("ListItemAllFields/ID,ListItemAllFields/Created").orderBy("ListItemAllFields/ArticleStartDate",true)
+                .expand("ListItemAllFields")
+                .get().then((items) => {
+                    let ids: number[] = items.map((item) => { return item.ListItemAllFields.ID });
+                    resolve(ids);
                 })
-                resolve(articles)
-            })
         })
     }
+
+    static getNewsArticleDetails(webRealativePath: string, itemId: number): Promise<INewsArticle> {
+        return new Promise<INewsArticle>((resolve) => {
+            sp.web.lists.getByTitle("pages").items.getById(itemId).fieldValuesAsHTML
+                .select("Title,PreviewText,ArticleStartDate,LikesCount,LikedBy,FileLeafRef,Created,Author,PublishingPageImage")
+                .get()
+                .then((value) => {
+                    var image = value.PublishingPageImage ? $(value.PublishingPageImage.replace("<img ", "<br ")).attr("src") : "" ;
+                    let articleDate = value.ArticleStartDate ? (new Date(value.ArticleStartDate)).toDateString() : "";
+
+                    let article: INewsArticle = {
+                        Title: value.Title,
+                        PreviewText: value.PreviewText,
+                        PublishingRollupImage: "newsItem.PublishingRollupImage",
+                        ArticleStartDate: articleDate,
+                        LikesCount: value.LikesCount,
+                        LikedByStringId: value.LikedBy,
+                        FileRef: "../pages/news/"+ value.FileLeafRef,
+                        Author: value.Author,
+                        Created: value.Created,
+                        FileDirRef: "",
+                        ID: itemId,
+                        PublishingContact: "",
+                        PublishingPageContent: "",
+                        PublishingPageImage: image,
+                        SocialThreadID: ""
+                    }
+                    resolve(article);
+                })
+        })
+    }
+
+    // static getNewsArticles(webRealativePath: string): Promise<INewsArticle[]> {
+    //     return new Promise<INewsArticle[]>((resolve, reject) => {
+    //         sp.web.lists.getByTitle("pages").items
+    //             .select("Title,PreviewText,ArticleStartDate,LikesCount,FileRef,Created,FieldValuesAsText/MetaInfo")
+    //             .expand("FieldValuesAsText")
+    //             .filter("startswith(FileRef,'" + webRealativePath + "/pages/news/')")
+    //             .top(4).get().then((news) => {
+
+    //                 let articles: INewsArticle[] = news.map((newsItem) => {
+
+    //                     var pubImage = (newsItem.FieldValuesAsText.MetaInfo || "")
+    //                         .split('\r\n')
+    //                         .filter(function (e) { return e.match(/^PublishingRollupImage:SW/gi); })
+    //                         .map(function (e) { return e.split('|')[1]; });
+    //                     //    console.log(pubImage[0]);
+
+    //                     let v: INewsArticle = {
+    //                         Title: newsItem.Title,
+    //                         PreviewText: newsItem.PreviewText,
+    //                         PublishingRollupImage: "newsItem.PublishingRollupImage",
+    //                         ArticleStartDate: newsItem.ArticleStartDate,
+    //                         LikesCount: newsItem.LikesCount,
+    //                         LikedByStringId: newsItem.LikedByStringId,
+    //                         FileRef: newsItem.FileRef,
+    //                         Author: "newsItem.Author",
+    //                         Created: newsItem.Created,
+    //                         FileDirRef: "",
+    //                         ID: 0,
+    //                         PublishingContact: "",
+    //                         PublishingPageContent: "",
+    //                         PublishingPageImage: "newsItem.PublishingPageImage",
+    //                         SocialThreadID: ""
+    //                     };
+
+    //                     return v;
+    //                 })
+    //                 resolve(articles);
+    //             });
+
+
+
+
+    //         // sp.web.getFolderByServerRelativeUrl(webRealativePath + "/pages/news").files.top(4).expand("ListItemAllFields").get().then((news) => {
+    //         //     console.log(news)
+    //         //     let articles: INewsArticle[] = news.map((news) => {
+
+    //         //         let newsDetails = news.ListItemAllFields;
+    //         //         let v: INewsArticle = {
+    //         //             Title:newsDetails.Title,
+    //         //             PreviewText: newsDetails.PreviewText,
+    //         //             PublishingRollupImage: newsDetails.PublishingRollupImage,
+    //         //             ArticleStartDate: newsDetails.ArticleStartDate,
+    //         //             LikesCount: newsDetails.LikesCount,
+    //         //             LikedByStringId:newsDetails.LikedBy,
+    //         //             FileRef : newsDetails.FileRef,
+    //         //             Author: newsDetails.Author,
+    //         //             Created: newsDetails.Created,
+    //         //             FileDirRef :"",
+    //         //             ItemCount:0,
+    //         //             PublishingContact:"",
+    //         //             PublishingPageContent:"",
+    //         //             PublishingPageImage:newsDetails.PublishingPageImage,
+    //         //             SocialThreadID:""
+    //         //         };
+    //         //         return v;
+    //         //     })
+    //         //     resolve(articles)
+    //         // })
+    //     })
+    // }
 
 }
